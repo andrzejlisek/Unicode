@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unicode generator</title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <form name="MainForm" accept-charset="UTF-8">
+            <p align="center">
+                <a href="https://unicode.org/Public/UNIDATA/Blocks.txt">Blocks.txt</a><br/>
+                <textarea id="Input1" style="width:100%" rows="10"></textarea>
+            </p>
+            <p align="center">
+                <a href="https://unicode.org/Public/UNIDATA/UnicodeData.txt">UnicodeData.txt</a><br/>
+                <textarea id="Input2" style="width:100%" rows="10"></textarea>
+            </p>
+            <p align="center">
+                <input type="button" value="unicodechar.js" onclick="Generate()"><br/>
+                <textarea id="Output" style="width:100%" rows="10"></textarea>
+            </p>
+        </form>
+        <script type="text/javascript" src="generator.js"></script>
+    </body>
+</html>
