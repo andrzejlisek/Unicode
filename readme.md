@@ -21,6 +21,8 @@ It uses data generated from the two Unicode official files for character definit
 
 The application contains the generator\.htm file, which helps in updating the character definitions\.
 
+The application is available online from the address: [https://andrzejlisek\.github\.io/Unicode/unicode\.htm](https://andrzejlisek.github.io/Unicode/unicode.htm "https://andrzejlisek.github.io/Unicode/unicode.htm")
+
 # Basic parameters
 
 At the top of the page, there are basic parameters\.
@@ -45,12 +47,22 @@ The parameters has the following meaning:
 * **Size in text box** \- Font size in text box at the bottop of this page\.
 * **Prefix/Suffix** \- The text before and after character\. This is usabe to view character connected with other character, for example, to view diacritic charater used with the letter\.
 * **Margin top/bottom** \- The number of blank lines above and below the character\. Some characters can have glyph outside of the box and the free space is needed to view such character clearly\.
+* **Char code** \- Enable or disable character codes in character information:
+  * **Hex** \- Hexadecimal number\.
+  * **Dec** \- Decimal number\.
+  * **UTF\-8** \- UTF\-8 byte sequence\.
+  * **UTF\-16LE** \- UTF\-16 byte sequence using little endian order\.
+  * **UTF\-16BE** \- UTF\-16 byte sequence using big endian order\.
+* **Char description** \- Enable or disable character description elements in character information:
+  * **Block** \- Block name and address if exists\.
+  * **Name** \- Character name if exists\.
+  * **Other name** \- Character other name if exisits\.
 
 Every parameter will be saved and restored after application restart\.
 
 # Browsing and viewing the characters
 
-The main puspose of the application is browsing the Unicode characters\. The browser shows the one page consisting of 256 characters\.
+The main puspose of the application is browsing the Unicode characters\. The browser shows one page consisting of 256 characters\.
 
 ![](readme_pics/Table1.png "")
 
@@ -192,7 +204,7 @@ The character browser has 9 independed slots indicated as buttons below the char
 
 ![](readme_pics/Complex.png "")
 
-You can change the current slot by clicking the buttons\. The current slot selection will be indicated by **\[** and **\]** characters\.
+You can change the current slot by clicking the buttons\. The current slot selection will be indicated by **\[** and **\]** characters\. You can move character selection in all slots by clicking the **<** and **>** buttons\.
 
 If there is selected other page than **00** on the other slots, you will also browse the elementary characters\. For example, you can use the variation selectors on the page **FE**\. You can prepare the page on the next slot\.
 
@@ -228,7 +240,7 @@ Character information, when the slot of second elementary character is selected:
 
 # Finding the characters
 
-You can find any character from text or character by name\. using the search field:
+You can find any character from text or character by name using the search field:
 
 ![](readme_pics/Search0.png "")
 
@@ -279,6 +291,31 @@ You can click the **Clear** button to disappear the find result table and clear 
 ## Result table
 
 If you click the **Char** or **Name** button, there will be show the find result table\. If you click the row in the table, you will be redirected to the character, which is in the row\. To clear the result table, you can click the **Clear** button\.
+
+# Decoding UTF
+
+Using the **Find** field, you can decode any UTF\-8 or UTF\-16 byte sequence\. The sequence must be written in the **Find** field as hexadecimal numbers\. Characters other than digits and letters from **A** to **F** will be ignored\. The sequence must contain even number of hexadecimal numbers\. To decode, you have to click one of the buttons below:
+
+
+* **UTF\-8** \- Decode UTF\-8 sequence\.
+* **UTF\-16LE** \- Decode UTF\-16 sequence using little endian byte order\.
+* **UTF\-16BE** \- Decode UTF\-16 sequence using big endian byte order\.
+
+## Decode examples
+
+The below, there is show decoding the same character sequence written using all supported encodings\.
+
+The UTF\-8 sequence:
+
+![](readme_pics/Search11.png "")
+
+The UTF\-16 little endian sequence:
+
+![](readme_pics/Search12.png "")
+
+The UTF\-16 big endian sequence:
+
+![](readme_pics/Search13.png "")
 
 # Text box
 

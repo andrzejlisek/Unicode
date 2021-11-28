@@ -41,13 +41,16 @@ function Generate()
     var RawBlock = document.getElementById("Input1").value.split('\n');
     var RawChar = document.getElementById("Input2").value.split('\n');
     
-    var Code = [];
+    var CodeC = [];
+    var CodeB = [];
     
     var BlockNum1 = [];
     var BlockNum2 = [];
     var BlockName = [];
     var BlockCount = 0;
     
+    CodeB.push("function FillBlockNames(X)");
+    CodeB.push("{");
     for (var I = 0; I < RawBlock.length; I++)
     {
         var RawLine = RawBlock[I];
@@ -63,13 +66,16 @@ function Generate()
                 BlockNum1.push(HexToInt(Num1));
                 BlockNum2.push(HexToInt(Num2));
                 BlockName.push(Name);
+                var CodeLine = " X[" + BlockCount + "] = [" + HexToInt(Num1) + ", " + HexToInt(Num2) + ", \"" + Name + "\"];";
+                CodeB.push(CodeLine);
                 BlockCount++;
             }
         }
     }
+    CodeB.push("}");
     
-    Code.push("function FillCharTable(X)");
-    Code.push("{");
+    CodeC.push("function FillCharNames(X)");
+    CodeC.push("{");
     for (var I = 0; I < RawChar.length; I++)
     {
         var RawLine = RawChar[I].split(';');
@@ -92,10 +98,10 @@ function Generate()
             var CodeL = HexToInt(RawLine[13]);
             var CodeT = HexToInt(RawLine[14]);
             var CodeLine = " X[" + CharNum + "] = [\"" + BlockNameX + "\", \"" + RawLine[1] + "\", \"" + RawLine[10] + "\", " + CodeU + ", " + CodeL + ", " + CodeT + ", " + Block1 + ", " + Block2 + "];";
-            Code.push(CodeLine);
+            CodeC.push(CodeLine);
         }
     }
-    Code.push("}");
-    document.getElementById("Output").value = Code.join("\n");
+    CodeC.push("}");
+    document.getElementById("Output").value = CodeC.join("\n") + "\n" + "\n" + CodeB.join("\n") + "\n";
 }
 

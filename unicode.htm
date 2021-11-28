@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Unicode</title>
-        <meta charset="utf-8" />
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <style type="text/css">
             span.dispchar      {color:#000000;text-decoration:none;background-color:#E0E0E0;}
@@ -19,18 +19,21 @@
     <body>
         <form name="MainForm" accept-charset="UTF-8">
             <p align="center">
-                Display: <input id="xSET_HtmlAsEntity1" type="button" value="Entity" onClick="HtmlAsEntityOpt(1)" /><input id="xSET_HtmlAsEntity0" type="button" value="Raw" onClick="HtmlAsEntityOpt(0)" /><br />
+                Display: <input id="xSET_HtmlAsEntity1" type="button" value="Entity" onClick="HtmlAsEntityOpt(1)"><input id="xSET_HtmlAsEntity0" type="button" value="Raw" onClick="HtmlAsEntityOpt(0)"><br>
 
-                Font family: <input type="text" id="xSET_FontName" value="" onchange="SetFontStyle(0)" /><br />
-                Font preset: <input type="button" id="FontPreset0" value="" onClick="FontPreset(0);" /><input type="button" id="FontPreset1" value="" onClick="FontPreset(1);" /><input type="button" id="FontPreset2" value="" onClick="FontPreset(2);" /><input type="button" id="FontPreset3" value="" onClick="FontPreset(3);" /><input type="button" id="FontPreset4" value="" onClick="FontPreset(4);" /><br />
-                Size in table: <input type="number" id="xSET_FontSize" value="10" size="5" onchange="Zoom0()" /><input type="button" value="+" onClick="ZoomI();" /><input type="button" value="-" onClick="ZoomO();" /><br />
-                Size in preview: <input type="number" id="xSET_FontSizeX" value="100" size="5" onchange="Zoom0()" /><input type="button" value="+" onClick="ZoomIX();" /><input type="button" value="-" onClick="ZoomOX();" /><br />
-                Size in text box: <input type="number" id="xSET_WriteBoxFontSize" value="20" size="5" onchange="WriteBoxSize(99)" /><input type="button" value="+" onClick="WriteBoxSize(5);" /><input type="button" value="-" onClick="WriteBoxSize(4);" /><br />
-                Prefix/Suffix: <input type="text" value="" id="xSET_Prefix" size="5" onchange="SetFontStyle(0)" /><input type="text" value="" id="xSET_Suffix" size="5" onchange="SetFontStyle(0)" /><br />
-                Margin top/bottom: <input type="number" value="0" id="xSET_MarginTop" size="5" onchange="SetFontStyle(0)" /><input type="number" value="0" id="xSET_MarginBot" size="5" onchange="SetFontStyle(0)" /><br />
+                Font family: <input type="text" id="xSET_FontName" value="" onchange="SetFontStyle(0)"><br>
+                Font preset: <input type="button" id="FontPreset0" value="" onClick="FontPreset(0);"><input type="button" id="FontPreset1" value="" onClick="FontPreset(1);"><input type="button" id="FontPreset2" value="" onClick="FontPreset(2);"><input type="button" id="FontPreset3" value="" onClick="FontPreset(3);"><input type="button" id="FontPreset4" value="" onClick="FontPreset(4);"><br>
+                Size in table: <input type="number" id="xSET_FontSize" value="10" size="5" onchange="Zoom0()"><br>
+                Size in preview: <input type="number" id="xSET_FontSizeX" value="100" size="5" onchange="Zoom0()"><br>
+                Size in text box: <input type="number" id="xSET_WriteBoxFontSize" value="20" size="5" onchange="WriteBoxSize(99)"><br>
+                Prefix/Suffix: <input type="text" value="" id="xSET_Prefix" size="5" onchange="SetFontStyle(0)"><input type="text" value="" id="xSET_Suffix" size="5" onchange="SetFontStyle(0)"><br>
+                Margin top/bottom: <input type="number" value="0" id="xSET_MarginTop" size="5" onchange="SetFontStyle(0)"><input type="number" value="0" id="xSET_MarginBot" size="5" onchange="SetFontStyle(0)"><br>
+                Char code: <input type="button" id="DispCode0" onclick="CharInfoDisplayCodeSet(0)"><input type="button" id="DispCode1" onclick="CharInfoDisplayCodeSet(1)"><input type="button" id="DispCode2" onclick="CharInfoDisplayCodeSet(2)"><input type="button" id="DispCode3" onclick="CharInfoDisplayCodeSet(3)"><input type="button" id="DispCode4" onclick="CharInfoDisplayCodeSet(4)"><br>
+                Char description: <input type="button" id="DispCode5" onclick="CharInfoDisplayCodeSet(5)"><input type="button" id="DispCode6" onclick="CharInfoDisplayCodeSet(6)"><input type="button" id="DispCode7" onclick="CharInfoDisplayCodeSet(7)"><br>
             </p>
             <p align="center">
-                Find: <input type="text" id="FormCharFind" value="" /><input type="button" value="Char" onClick="FindChar(1);" /><input type="button" value="Name" onClick="FindChar(2);" /><input type="button" value="Clear" onClick="FindChar(0);" /><br />
+                Find: <input type="text" id="FormCharFind" value=""><input type="button" value="Char" onClick="FindChar(1);"><input type="button" value="Name" onClick="FindChar(2);"><input type="button" value="Clear" onClick="FindChar(0);"><br>
+                Decode hex: <input type="button" value="UTF-8" onClick="FindChar(3);"><input type="button" value="UTF-16LE" onClick="FindChar(4);"><input type="button" value="UTF-16BE" onClick="FindChar(5);"><br>
             </p>
             <table align="center" id="SearchTable" border="1" cellpadding="0" cellspacing="0"></table>
             <p align="center">
@@ -49,18 +52,18 @@
                     <td>&nbsp;Char&nbsp;L&nbsp;</td>
                 </tr>
                 <tr>
-                    <td><input type="button" value="<" onClick="PagePrev(5);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(4);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(3);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(2);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(1);" style="width:100%;height:30px;" /></td>
+                    <td><input type="button" value="<" onClick="PagePrev(5);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(4);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(3);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(2);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(1);" style="width:100%;height:30px;"></td>
                 </tr>
                 <tr>
-                    <td><input type="button" value=">" onClick="PageNext(5);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(4);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(3);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(2);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(1);" style="width:100%;height:30px;" /></td>
+                    <td><input type="button" value=">" onClick="PageNext(5);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(4);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(3);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(2);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(1);" style="width:100%;height:30px;"></td>
                 </tr>
                 <tr>
                     <td colspan="5">
@@ -80,18 +83,18 @@
                     <td>&nbsp;Char&nbsp;L&nbsp;</td>
                 </tr>
                 <tr>
-                    <td><input type="button" value="<" onClick="PagePrev(5);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(4);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(3);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(2);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value="<" onClick="PagePrev(1);" style="width:100%;height:30px;" /></td>
+                    <td><input type="button" value="<" onClick="PagePrev(5);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(4);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(3);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(2);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value="<" onClick="PagePrev(1);" style="width:100%;height:30px;"></td>
                 </tr>
                 <tr>
-                    <td><input type="button" value=">" onClick="PageNext(5);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(4);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(3);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(2);" style="width:100%;height:30px;" /></td>
-                    <td><input type="button" value=">" onClick="PageNext(1);" style="width:100%;height:30px;" /></td>
+                    <td><input type="button" value=">" onClick="PageNext(5);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(4);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(3);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(2);" style="width:100%;height:30px;"></td>
+                    <td><input type="button" value=">" onClick="PageNext(1);" style="width:100%;height:30px;"></td>
                 </tr>
                 <tr>
                     <td colspan="5">
@@ -107,13 +110,14 @@
                 <input type="button" id="xSET_FontN" onClick="SetFontStyle(5)">
             </p>
             <p align="center">
-                <span id="CharInfo"></span><br />
-                <span id="CharView"></span><br />
+                <span id="CharInfo"></span><br>
+                <span id="CharView"></span><br>
                 <input type="button" value="Upper" id="CaseU" onclick="SetCase(0)">
                 <input type="button" value="Lower" id="CaseL" onclick="SetCase(1)">
                 <input type="button" value="Title" id="CaseT" onclick="SetCase(2)">
             </p>
             <p align="center">
+                <input type="button" value="<" id="SlotPrev" onclick="CurrentSetSlot(-1)">
                 <input type="button" value="" id="Slot1" onclick="CurrentSetSlot(1)">
                 <input type="button" value="" id="Slot2" onclick="CurrentSetSlot(2)">
                 <input type="button" value="" id="Slot3" onclick="CurrentSetSlot(3)">
@@ -122,7 +126,8 @@
                 <input type="button" value="" id="Slot6" onclick="CurrentSetSlot(6)">
                 <input type="button" value="" id="Slot7" onclick="CurrentSetSlot(7)">
                 <input type="button" value="" id="Slot8" onclick="CurrentSetSlot(8)">
-                <input type="button" value="" id="Slot9" onclick="CurrentSetSlot(9)"><br />
+                <input type="button" value="" id="Slot9" onclick="CurrentSetSlot(9)">
+                <input type="button" value=">" id="SlotNext" onclick="CurrentSetSlot(-2)"><br>
             </p>
             <p align="center">
                 <input type="button" value="Seq B" onClick="WriteBoxChar(-3)">
@@ -131,17 +136,18 @@
                 <input type="button" value="Clear" onClick="WriteBoxClear()">
                 <input type="button" value="EOL A" onClick="WriteBoxChar(1)">
                 <input type="button" value="Char A" onClick="WriteBoxChar(2)">
-                <input type="button" value="Seq A" onClick="WriteBoxChar(3)"><br />
-                <textarea id="WriteBox" rows="1" cols="1" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; width:100%;" oninput="CurrentSaveWB()"></textarea><br />
-                <input type="button" value="Rows-" onClick="WriteBoxSize(0)" />
-                <input type="button" value="Size-" onClick="WriteBoxSize(4)" />
-                <input type="button" value="Font" onClick="WriteBoxToFont()" />
-                <input type="button" value="Size+" onClick="WriteBoxSize(5)" />
-                <input type="button" value="Rows+" onClick="WriteBoxSize(1)" /><br />
+                <input type="button" value="Seq A" onClick="WriteBoxChar(3)"><br>
+                <textarea id="WriteBox" rows="1" cols="1" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; width:100%;" oninput="CurrentSaveWB()"></textarea><br>
+                <input type="button" value="Rows-" onClick="WriteBoxSize(0)">
+                <input type="button" value="Size-" onClick="WriteBoxSize(4)">
+                <input type="button" value="Font" onClick="WriteBoxToFont()">
+                <input type="button" value="Size+" onClick="WriteBoxSize(5)">
+                <input type="button" value="Rows+" onClick="WriteBoxSize(1)"><br>
             </p>
         </form>
-        <br />
-        <br />
+        <br>
+        <br>
+        <script type="text/javascript" src="codec.js"></script>
         <script type="text/javascript" src="unistorage.js"></script>
         <script type="text/javascript" src="unicodechar.js"></script>
         <script type="text/javascript" src="unicode.js"></script>

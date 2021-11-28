@@ -22,14 +22,25 @@ var SET_WriteBoxCols = DataGetIDefault(SettingsPrefix + "SET_WriteBoxCols", 10);
 var SET_WriteBoxFontSize = DataGetIDefault(SettingsPrefix + "SET_WriteBoxFontSize", 20);
 
 var FindCharStateText = DataGetDefault(SettingsPrefix + "FindCharStateText", "");
-var FindCharStateMode = DataGetIDefault(SettingsPrefix + "FindCharStateMode", "");
+var FindCharStateMode = DataGetIDefault(SettingsPrefix + "FindCharStateMode", 0);
 
 var FontPresetN = ["Serif", "Sans", "Cursive", "Fantasy", "Mono"];
 var FontPresetF = ["serif", "sans-serif", "cursive", "fantasy", "monospace"];
 
 var XFontName = "";
 
+var SET_DisplayCode = [];
+SET_DisplayCode[0] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode0", 1); // Hex
+SET_DisplayCode[1] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode1", 1); // Dec
+SET_DisplayCode[2] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode2", 0); // UTF-8
+SET_DisplayCode[3] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode3", 0); // UTF-16LE
+SET_DisplayCode[4] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode4", 0); // UTF-16BE
+SET_DisplayCode[5] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode5", 1); // Block
+SET_DisplayCode[6] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode6", 1); // Name
+SET_DisplayCode[7] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode7", 1); // Other name
 
+var DisplayCodeName = ["Hex", "Dec", "UTF-8", "UTF-16LE", "UTF-16BE"];
+var DisplayCodeSep = ["|", "|", "&nbsp;", "&nbsp;", "&nbsp;"];
 
 
 var CurrentCode = [5, -1, -1, -1, -1, 0, -1, -1, -1, -1];
@@ -51,6 +62,50 @@ CurrentCode[7] = DataGetIDefault(SettingsPrefix + "CurrentCode7", -1);
 CurrentCode[8] = DataGetIDefault(SettingsPrefix + "CurrentCode8", -1);
 CurrentCode[9] = DataGetIDefault(SettingsPrefix + "CurrentCode9", -1);
 
+
+
+function CharInfoDisplayCodeSet(N)
+{
+    if (N >= 0)
+    {
+        if (SET_DisplayCode[N])
+        {
+            SET_DisplayCode[N] = 0;
+            DataSetI(SettingsPrefix + "SET_DisplayCode" + N, 0);
+        }
+        else
+        {
+            SET_DisplayCode[N] = 1;
+            DataSetI(SettingsPrefix + "SET_DisplayCode" + N, 1);
+        }
+    }
+    
+    var BtnNames = [];
+    BtnNames[0] = "Hex";
+    BtnNames[1] = "Dec";
+    BtnNames[2] = "UTF-8";
+    BtnNames[3] = "UTF-16LE";
+    BtnNames[4] = "UTF-16BE";
+    BtnNames[5] = "Block";
+    BtnNames[6] = "Name";
+    BtnNames[7] = "Other name";
+    for (var I = 0; I <= 7; I++)
+    {
+        if (SET_DisplayCode[I])
+        {
+            BtnNames[I] = "[" + BtnNames[I] + "]";
+        }
+        document.getElementById("DispCode" + I).value = BtnNames[I];
+    }
+    
+    if (N >= 0)
+    {
+        DisplayCurrent();
+    }
+}
+
+
+
 function CurrentCodeGet()
 {
     return CurrentCode[CurrentCode[0]];
@@ -62,7 +117,7 @@ function CurrentCodeSet(C)
 }
 
 
-function CurrentFullCode(Hex)
+function CurrentFullCode(Type)
 {
     var C = "";
     for (var I = 1; I <= 9; I++)
@@ -71,20 +126,13 @@ function CurrentFullCode(Hex)
         {
             if (C != "")
             {
-                C = C + "|";
+                C = C + DisplayCodeSep[Type];
             }
             if (I == CurrentCode[0])
             {
                 C = C + "<b>";
             }
-            if (Hex)
-            {
-                C = C + NumToHex(CurrentCode[I]);
-            }
-            else
-            {
-                C = C + NumToDec(CurrentCode[I]);
-            }
+            C = C + GetCharCode(CurrentCode[I], Type);
             if (I == CurrentCode[0])
             {
                 C = C + "</b>";
@@ -122,7 +170,42 @@ function CurrentSaveWB()
 
 function CurrentSetSlot(N)
 {
-    CurrentCode[0] = N;
+    if (N == -1)
+    {
+        if (CurrentCode[0] > 1)
+        {
+            CurrentCode[1] = CurrentCode[2];
+            CurrentCode[2] = CurrentCode[3];
+            CurrentCode[3] = CurrentCode[4];
+            CurrentCode[4] = CurrentCode[5];
+            CurrentCode[5] = CurrentCode[6];
+            CurrentCode[6] = CurrentCode[7];
+            CurrentCode[7] = CurrentCode[8];
+            CurrentCode[8] = CurrentCode[9];
+            CurrentCode[9] = -1;
+            CurrentCode[0]--;
+        }
+    }
+    if (N == -2)
+    {
+        if (CurrentCode[0] < 9)
+        {
+            CurrentCode[9] = CurrentCode[8];
+            CurrentCode[8] = CurrentCode[7];
+            CurrentCode[7] = CurrentCode[6];
+            CurrentCode[6] = CurrentCode[5];
+            CurrentCode[5] = CurrentCode[4];
+            CurrentCode[4] = CurrentCode[3];
+            CurrentCode[3] = CurrentCode[2];
+            CurrentCode[2] = CurrentCode[1];
+            CurrentCode[1] = -1;
+            CurrentCode[0]++;
+        }
+    }
+    if (N > 0)
+    {
+        CurrentCode[0] = N;
+    }
     Repaint();
     DisplayCurrent();
 }
@@ -466,8 +549,17 @@ function DisplayCurrent()
 
     var EOL = "<br />";
     var X = "";
-    X += "Hex: " + CurrentFullCode(true) + EOL;
-    X += "Dec: " + CurrentFullCode(false) + EOL;
+    for (var I = 0; I < 5; I++)
+    {
+        if (SET_DisplayCode[I] == 1)
+        {
+            if (X != "")
+            {
+                X = X + EOL;
+            }
+            X += DisplayCodeName[I] + ": " + CurrentFullCode(I);
+        }
+    }
     if (C >= 0)
     {
         if (C in CharNames)
@@ -475,23 +567,33 @@ function DisplayCurrent()
             var N = CharNames[C];
             var Block1 = N[6];
             var Block2 = N[7];
-            if ((Block1 >= 0) && (Block2 >= 0))
+            if (SET_DisplayCode[5] && (Block1 >= 0) && (Block2 >= 0))
             {
+                if (X != "")
+                {
+                    X = X + EOL;
+                }
                 X += "Block: " + TextToHtml(N[0]) + " (";
                 X += "<a onclick=\"return DispCharPage(" + Block1 + ")\" href=\"#\">" + NumToHex(Block1) + "</a>";
                 X += " - ";
                 X += "<a onclick=\"return DispCharPage(" + Block2 + ")\" href=\"#\">" + NumToHex(Block2) + "</a>";
                 X += ")";
-                X += EOL;
             }
-            if (N[2] != "")
+            if (SET_DisplayCode[6] && (N[1] != ""))
             {
-                X += "Name: " + TextToHtml(N[1]) + EOL;
-                X += "Other name: " + TextToHtml(N[2]);
-            }
-            else
-            {
+                if (X != "")
+                {
+                    X = X + EOL;
+                }
                 X += "Name: " + TextToHtml(N[1]);
+            }
+            if (SET_DisplayCode[7] && (N[2] != ""))
+            {
+                if (X != "")
+                {
+                    X = X + EOL;
+                }
+                X += "Other name: " + TextToHtml(N[2]);
             }
 
             if (CharNames[C][3] >= 0)
@@ -524,6 +626,20 @@ function DisplayCurrent()
             document.getElementById("CaseU").style["display"] = "none";
             document.getElementById("CaseL").style["display"] = "none";
             document.getElementById("CaseT").style["display"] = "none";
+            for (var I = 0; I < BlockNamesL; I++)
+            {
+                if ((BlockNames[I][0] <= C) && (BlockNames[I][1] >= C))
+                {
+                    var Block1 = BlockNames[I][0];
+                    var Block2 = BlockNames[I][1];
+                    X += "Block: " + TextToHtml(BlockNames[I][2]) + " (";
+                    X += "<a onclick=\"return DispCharPage(" + Block1 + ")\" href=\"#\">" + NumToHex(Block1) + "</a>";
+                    X += " - ";
+                    X += "<a onclick=\"return DispCharPage(" + Block2 + ")\" href=\"#\">" + NumToHex(Block2) + "</a>";
+                    X += ")";
+                    break;
+                }
+            }
         }
     }
     else
@@ -549,39 +665,7 @@ function SetCase(Mode)
     }
 }
 
-// Change number to decimal code
-function NumToDec(N)
-{
-    return "" + N + "";
-}
 
-// Change number to hexadecimal code
-function NumToHex(N)
-{
-    if (N < 0)
-    {
-        var N_ = Math.floor((0 - N) / 256);
-        if (N_ > 0)
-        {
-            return NumToHex(N_) + "__";
-        }
-        else
-        {
-            return "__";
-        }
-    }
-
-    var X = N.toString(16).toUpperCase();
-    if (X.length == 0)
-    {
-        X = "00";
-    }
-    if ((X.length == 1) || (X.length == 3) || (X.length == 5))
-    {
-        X = '0' + X;
-    }
-    return X;
-}
 
 // Change character number to HTML character display
 function NumToHtml(T, Sel)
@@ -658,23 +742,9 @@ function NumToHtml(T, Sel)
     return Format1 + X + Format2;
 }
 
-// Zamiana numeru na znak
-function NumToChar(T)
-{
-    if ((T <= 0xD7FF) || ((T >= 0xE000) && (T <= 0xFFFF)))
-    {
-        return String.fromCharCode(T);
-    }
-    else
-    {
-        T = T - 65536;
-        var V1 = T >> 10;
-        var V2 = T & 1023;
-        return String.fromCharCode(V1 + 0xD800, V2 + 0xDC00);
-    }
-}
 
-// Nowa komorka tabeli znakow
+
+// New cell in character table
 function NewCell(TblR, N)
 {
     var TblC = TblR.insertCell(N);
@@ -683,14 +753,19 @@ function NewCell(TblR, N)
     return TblC;
 }
 
-// Nazwy znakow
-var CharNames;
+// Character names
+var CharNames = [];
 
-// Generowanie tabeli
+// Block names
+var BlockNames = [];
+var BlockNamesL = 0;
+
+// Generation table and initializing other elements
 function Create()
 {
-    CharNames = new Array();
-    FillCharTable(CharNames);
+    FillCharNames(CharNames);
+    FillBlockNames(BlockNames);
+    BlockNamesL = BlockNames.length;
 
     var Tbl = document.getElementById("UniTable");
     var TblR = Tbl.insertRow(0);
@@ -747,6 +822,7 @@ function Create()
     TblC.onclick = new Function("CharInfoPage(-1);");
 
     HtmlAsEntityOptBtn();
+    CharInfoDisplayCodeSet(-1);
 }
 
 // Previous page/plane
@@ -829,7 +905,7 @@ function PageNext(X)
     DisplayCurrent();
 }
 
-// Wyswietlanie wskazanej strony
+// Displaying current page
 function PageDisp()
 {
     SettingsSet();
@@ -842,46 +918,6 @@ function Zoom0()
     SET_FontSize = document.getElementById("xSET_FontSize").value;
     SET_FontSizeX = document.getElementById("xSET_FontSizeX").value;
     SettingsSave();
-    DisplayCurrent();
-}
-
-// Powiekszenie
-function ZoomI()
-{
-    SET_FontSize = document.getElementById("xSET_FontSize").value;
-    SET_FontSize++;
-    SettingsSave();
-    document.getElementById("xSET_FontSize").value = SET_FontSize;
-    DisplayCurrent();
-}
-
-// Pomniejszenie
-function ZoomO()
-{
-    SET_FontSize = document.getElementById("xSET_FontSize").value;
-    SET_FontSize--;
-    SettingsSave();
-    document.getElementById("xSET_FontSize").value = SET_FontSize;
-    DisplayCurrent();
-}
-
-// Powiekszenie
-function ZoomIX()
-{
-    SET_FontSizeX = document.getElementById("xSET_FontSizeX").value;
-    SET_FontSizeX++;
-    SettingsSave();
-    document.getElementById("xSET_FontSizeX").value = SET_FontSizeX;
-    DisplayCurrent();
-}
-
-// Pomniejszenie
-function ZoomOX()
-{
-    SET_FontSizeX = document.getElementById("xSET_FontSizeX").value;
-    SET_FontSizeX--;
-    SettingsSave();
-    document.getElementById("xSET_FontSizeX").value = SET_FontSizeX;
     DisplayCurrent();
 }
 
@@ -1010,7 +1046,7 @@ function DispTextCode(N)
     }
 }
 
-// Dojscie do strony z podanym znakiem
+// Getting page with specified character number
 function DispCharPage(T)
 {
     CurrentCodeSet(T);
@@ -1018,13 +1054,13 @@ function DispCharPage(T)
     return false;
 }
 
-// Szukanie znaku
+// Searching for characters
 function FindChar(FindMode)
 {
-    // Pobieranie obiektu tabeli
+    // Getting character list object
     var Tbl = document.getElementById("SearchTable");
 
-    // Usuniecie zawartosci tabeli
+    // Clearing the table
     var RowCount = Tbl.rows.length;
     while (RowCount > 0)
     {
@@ -1033,11 +1069,11 @@ function FindChar(FindMode)
     }
 
 
-    // Pobieranie frazy wyszukiwania
+    // Aquiring search phrase
     var SearchPhrase = "";
     if (FindMode >= 0)
     {
-        // Sprawdzanie, czy to jest tylko czyszczenie
+        // Of there is clear only
         if (FindMode == 0)
         {
             document.getElementById("FormCharFind").value = "";
@@ -1063,11 +1099,12 @@ function FindChar(FindMode)
         return;
     }
 
-    // Naglowek tabeli
+    // Character list header
     InsertHeaderToList(Tbl, 0);
 
     var I = 1;
 
+    // Split text into chars
     if (FindMode == 1)
     {
         var II = 1;
@@ -1084,7 +1121,21 @@ function FindChar(FindMode)
         I = II - 1;
     }
 
-    // Przeszukiwanie tablicy znakow Unicode
+    // Parse hex code
+    if ((FindMode == 3) || (FindMode == 4) || (FindMode == 5))
+    {
+        var CharList = CodeToChars(SearchPhrase, FindMode - 2);
+        var II = 1;
+        for (I = 0; I < CharList.length; I++)
+        {
+            var Key = CharList[I];
+            InsertCharToList(Tbl, II, Key);
+            II++;
+        }
+        I = II - 1;
+    }
+
+    // Search Unicode character list
     if (FindMode == 2)
     {
         if (false)
@@ -1253,7 +1304,7 @@ function InsertCharToList(Tbl, I, Key)
     TblRow.cells[2].style.fontFamily = XFontName;
 }
 
-// Wstawienie tekstu w polu tekstowym
+// Inserting the text in the text box
 function InsertAtCursor(myField, myValue)
 {
     //IE support
