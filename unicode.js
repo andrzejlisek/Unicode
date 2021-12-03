@@ -626,18 +626,25 @@ function DisplayCurrent()
             document.getElementById("CaseU").style["display"] = "none";
             document.getElementById("CaseL").style["display"] = "none";
             document.getElementById("CaseT").style["display"] = "none";
-            for (var I = 0; I < BlockNamesL; I++)
+            if (SET_DisplayCode[5])
             {
-                if ((BlockNames[I][0] <= C) && (BlockNames[I][1] >= C))
+                for (var I = 0; I < BlockNamesL; I++)
                 {
-                    var Block1 = BlockNames[I][0];
-                    var Block2 = BlockNames[I][1];
-                    X += "Block: " + TextToHtml(BlockNames[I][2]) + " (";
-                    X += "<a onclick=\"return DispCharPage(" + Block1 + ")\" href=\"#\">" + NumToHex(Block1) + "</a>";
-                    X += " - ";
-                    X += "<a onclick=\"return DispCharPage(" + Block2 + ")\" href=\"#\">" + NumToHex(Block2) + "</a>";
-                    X += ")";
-                    break;
+                    if ((BlockNames[I][0] <= C) && (BlockNames[I][1] >= C))
+                    {
+                        var Block1 = BlockNames[I][0];
+                        var Block2 = BlockNames[I][1];
+                        if (X != "")
+                        {
+                            X = X + EOL;
+                        }
+                        X += "Block: " + TextToHtml(BlockNames[I][2]) + " (";
+                        X += "<a onclick=\"return DispCharPage(" + Block1 + ")\" href=\"#\">" + NumToHex(Block1) + "</a>";
+                        X += " - ";
+                        X += "<a onclick=\"return DispCharPage(" + Block2 + ")\" href=\"#\">" + NumToHex(Block2) + "</a>";
+                        X += ")";
+                        break;
+                    }
                 }
             }
         }
