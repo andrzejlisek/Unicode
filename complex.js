@@ -543,3 +543,33 @@ function CurrentCodeMaxPos()
     }
 }
 
+
+function CurrentLoad()
+{
+    CurrentCodeMin = DataGetIDefault(SettingsPrefix + "CurrentCodeMin", 0);
+    CurrentCodeMax = DataGetIDefault(SettingsPrefix + "CurrentCodeMax", 0);
+    CurrentCodeO = DataGetIDefault(SettingsPrefix + "CurrentCodeO", 0);
+    CurrentCodeI = DataGetIDefault(SettingsPrefix + "CurrentCodeI", 0);
+    CurrentCodeL = DataGetIDefault(SettingsPrefix + "CurrentCodeL", 0);
+    
+    CurrentCode[0] = DataGetIDefault(SettingsPrefix + "CurrentCode0", 32);
+    for (var I = 1; I < CurrentCodeL; I++)
+    {
+        CurrentCode[I] = DataGetIDefault(SettingsPrefix + "CurrentCode" + I, -1);
+    }
+}
+
+function CurrentSave()
+{
+    DataSetI(SettingsPrefix + "CurrentCodeMin", CurrentCodeMin);
+    DataSetI(SettingsPrefix + "CurrentCodeMax", CurrentCodeMax);
+    DataSetI(SettingsPrefix + "CurrentCodeO", CurrentCodeO);
+    DataSetI(SettingsPrefix + "CurrentCodeI", CurrentCodeI);
+    DataSetI(SettingsPrefix + "CurrentCodeL", CurrentCodeL);
+
+    for (var I = 0; I < CurrentCodeL; I++)
+    {
+        DataSetI(SettingsPrefix + "CurrentCode" + I, CurrentCode[I]);
+    }
+}
+

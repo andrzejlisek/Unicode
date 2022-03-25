@@ -142,34 +142,6 @@ function CurrentFullCode(Type)
     return C;
 }
 
-function CurrentLoad()
-{
-    /*CurrentCode[0] = DataGetIDefault(SettingsPrefix + "CurrentCode0", 1);
-    CurrentCode[1] = DataGetIDefault(SettingsPrefix + "CurrentCode1", 32);
-    for (var I = 2; I <= ComplexSlots; I++)
-    {
-        CurrentCode[I] = DataGetIDefault(SettingsPrefix + "CurrentCode" + I, -1);
-    }*/
-
-
-    CurrentCodeI = 0;
-    CurrentCodeSetIdx(0, 32);
-    
-    /*for (var I = 2; I <= ComplexSlots; I++)
-    {
-        CurrentCode[I] = 32;
-    }*/
-}
-
-function CurrentSave()
-{
-    /*for (var I = 0; I < ComplexSlots; I++)
-    {
-        DataSetI(SettingsPrefix + "CurrentCode" + I, CurrentCode[I]);
-    }*/
-}
-
-
 function CurrentSaveWB()
 {
     DataSet(SettingsPrefix + "CurrentWriteBox", document.getElementById("WriteBox").value);
