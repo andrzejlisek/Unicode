@@ -340,3 +340,18 @@ function CodeToChars(RawData, Code)
     }
 }
 
+function TextToChars(RawText)
+{
+    var Chars = [];
+    for (var I = 0; I < RawText.length; I++)
+    {
+        var Key = RawText.codePointAt(I);
+        Chars.push(Key);
+        if (Key >= 65536)
+        {
+            I++;
+        }
+    }
+    return Chars;
+}
+

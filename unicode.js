@@ -21,6 +21,8 @@ var SET_WriteBoxRows = DataGetIDefault(SettingsPrefix + "SET_WriteBoxRows", 5);
 var SET_WriteBoxCols = DataGetIDefault(SettingsPrefix + "SET_WriteBoxCols", 10);
 var SET_WriteBoxFontSize = DataGetIDefault(SettingsPrefix + "SET_WriteBoxFontSize", 20);
 
+var SET_AutoClearSlots = DataGetIDefault(SettingsPrefix + "SET_AutoClearSlots", 1);
+
 var FindCharStateText = DataGetDefault(SettingsPrefix + "FindCharStateText", "");
 var FindCharStateMode = DataGetIDefault(SettingsPrefix + "FindCharStateMode", 0);
 
@@ -39,30 +41,36 @@ SET_DisplayCode[5] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode5", 1); //
 SET_DisplayCode[6] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode6", 1); // Name
 SET_DisplayCode[7] = DataGetIDefault(SettingsPrefix + "SET_DisplayCode7", 1); // Other name
 
+
+SET_EmojiT0 = DataGetIDefault(SettingsPrefix + "SET_EmojiT0", 1);
+SET_EmojiT1 = DataGetIDefault(SettingsPrefix + "SET_EmojiT1", 0);
+SET_EmojiT2 = DataGetIDefault(SettingsPrefix + "SET_EmojiT2", 0);
+SET_EmojiT3 = DataGetIDefault(SettingsPrefix + "SET_EmojiT3", 0);
+SET_EmojiTF = DataGetIDefault(SettingsPrefix + "SET_EmojiTF", 0);
+SET_EmojiTG = DataGetIDefault(SettingsPrefix + "SET_EmojiTG", 0);
+SET_EmojiTV = DataGetIDefault(SettingsPrefix + "SET_EmojiTV", 2);
+
+SET_EmojiP0 = DataGetIDefault(SettingsPrefix + "SET_EmojiP0", 1);
+SET_EmojiP1 = DataGetIDefault(SettingsPrefix + "SET_EmojiP1", 0);
+SET_EmojiP2 = DataGetIDefault(SettingsPrefix + "SET_EmojiP2", 0);
+SET_EmojiP3 = DataGetIDefault(SettingsPrefix + "SET_EmojiP3", 0);
+SET_EmojiPF = DataGetIDefault(SettingsPrefix + "SET_EmojiPF", 0);
+SET_EmojiPG = DataGetIDefault(SettingsPrefix + "SET_EmojiPG", 0);
+SET_EmojiPV = DataGetIDefault(SettingsPrefix + "SET_EmojiPV", 0);
+
+SET_ModuleArrangeConf = DataGetIDefault(SettingsPrefix + "SET_ModuleArrangeConf", 0);
+SET_ModuleArrangeLayout = DataGetDefault(SettingsPrefix + "SET_ModuleArrangeLayout", "01234567");
+
+
 var DisplayCodeName = ["Hex", "Dec", "UTF-8", "UTF-16LE", "UTF-16BE"];
 var DisplayCodeSep = ["|", "|", "&nbsp;", "&nbsp;", "&nbsp;"];
 
-
-var CurrentCode = [5, -1, -1, -1, -1, 0, -1, -1, -1, -1];
-
-
-
-
-
-
-
-CurrentCode[0] = DataGetIDefault(SettingsPrefix + "CurrentCode0", 5);
-CurrentCode[1] = DataGetIDefault(SettingsPrefix + "CurrentCode1", -1);
-CurrentCode[2] = DataGetIDefault(SettingsPrefix + "CurrentCode2", -1);
-CurrentCode[3] = DataGetIDefault(SettingsPrefix + "CurrentCode3", -1);
-CurrentCode[4] = DataGetIDefault(SettingsPrefix + "CurrentCode4", -1);
-CurrentCode[5] = DataGetIDefault(SettingsPrefix + "CurrentCode5", 32);
-CurrentCode[6] = DataGetIDefault(SettingsPrefix + "CurrentCode6", -1);
-CurrentCode[7] = DataGetIDefault(SettingsPrefix + "CurrentCode7", -1);
-CurrentCode[8] = DataGetIDefault(SettingsPrefix + "CurrentCode8", -1);
-CurrentCode[9] = DataGetIDefault(SettingsPrefix + "CurrentCode9", -1);
-
-
+var CurrentCode = [];
+var CurrentCodeO = 0;
+var CurrentCodeI = 0;
+var CurrentCodeL = 0;
+var CurrentCodeMin = 0;
+var CurrentCodeMax = 0;
 
 function CharInfoDisplayCodeSet(N)
 {
@@ -105,35 +113,23 @@ function CharInfoDisplayCodeSet(N)
 }
 
 
-
-function CurrentCodeGet()
-{
-    return CurrentCode[CurrentCode[0]];
-}
-
-function CurrentCodeSet(C)
-{
-    CurrentCode[CurrentCode[0]] = C;
-}
-
-
 function CurrentFullCode(Type)
 {
     var C = "";
-    for (var I = 1; I <= 9; I++)
+    for (var I = CurrentCodeMin; I <= CurrentCodeMax; I++)
     {
-        if (CurrentCode[I] >= 0)
+        if (CurrentCodeGetIdx(I) >= 0)
         {
             if (C != "")
             {
                 C = C + DisplayCodeSep[Type];
             }
-            if (I == CurrentCode[0])
+            if (I == CurrentCodeI)
             {
                 C = C + "<b>";
             }
-            C = C + GetCharCode(CurrentCode[I], Type);
-            if (I == CurrentCode[0])
+            C = C + GetCharCode(CurrentCodeGetIdx(I), Type);
+            if (I == CurrentCodeI)
             {
                 C = C + "</b>";
             }
@@ -146,19 +142,31 @@ function CurrentFullCode(Type)
     return C;
 }
 
+function CurrentLoad()
+{
+    /*CurrentCode[0] = DataGetIDefault(SettingsPrefix + "CurrentCode0", 1);
+    CurrentCode[1] = DataGetIDefault(SettingsPrefix + "CurrentCode1", 32);
+    for (var I = 2; I <= ComplexSlots; I++)
+    {
+        CurrentCode[I] = DataGetIDefault(SettingsPrefix + "CurrentCode" + I, -1);
+    }*/
+
+
+    CurrentCodeI = 0;
+    CurrentCodeSetIdx(0, 32);
+    
+    /*for (var I = 2; I <= ComplexSlots; I++)
+    {
+        CurrentCode[I] = 32;
+    }*/
+}
 
 function CurrentSave()
 {
-    DataSetI(SettingsPrefix + "CurrentCode0", CurrentCode[0]);
-    DataSetI(SettingsPrefix + "CurrentCode1", CurrentCode[1]);
-    DataSetI(SettingsPrefix + "CurrentCode2", CurrentCode[2]);
-    DataSetI(SettingsPrefix + "CurrentCode3", CurrentCode[3]);
-    DataSetI(SettingsPrefix + "CurrentCode4", CurrentCode[4]);
-    DataSetI(SettingsPrefix + "CurrentCode5", CurrentCode[5]);
-    DataSetI(SettingsPrefix + "CurrentCode6", CurrentCode[6]);
-    DataSetI(SettingsPrefix + "CurrentCode7", CurrentCode[7]);
-    DataSetI(SettingsPrefix + "CurrentCode8", CurrentCode[8]);
-    DataSetI(SettingsPrefix + "CurrentCode9", CurrentCode[9]);
+    /*for (var I = 0; I < ComplexSlots; I++)
+    {
+        DataSetI(SettingsPrefix + "CurrentCode" + I, CurrentCode[I]);
+    }*/
 }
 
 
@@ -167,44 +175,30 @@ function CurrentSaveWB()
     DataSet(SettingsPrefix + "CurrentWriteBox", document.getElementById("WriteBox").value);
 }
 
-
 function CurrentSetSlot(N)
 {
     if (N == -1)
     {
-        if (CurrentCode[0] > 1)
-        {
-            CurrentCode[1] = CurrentCode[2];
-            CurrentCode[2] = CurrentCode[3];
-            CurrentCode[3] = CurrentCode[4];
-            CurrentCode[4] = CurrentCode[5];
-            CurrentCode[5] = CurrentCode[6];
-            CurrentCode[6] = CurrentCode[7];
-            CurrentCode[7] = CurrentCode[8];
-            CurrentCode[8] = CurrentCode[9];
-            CurrentCode[9] = -1;
-            CurrentCode[0]--;
-        }
+        CurrentCodeO++;
     }
     if (N == -2)
     {
-        if (CurrentCode[0] < 9)
-        {
-            CurrentCode[9] = CurrentCode[8];
-            CurrentCode[8] = CurrentCode[7];
-            CurrentCode[7] = CurrentCode[6];
-            CurrentCode[6] = CurrentCode[5];
-            CurrentCode[5] = CurrentCode[4];
-            CurrentCode[4] = CurrentCode[3];
-            CurrentCode[3] = CurrentCode[2];
-            CurrentCode[2] = CurrentCode[1];
-            CurrentCode[1] = -1;
-            CurrentCode[0]++;
+        CurrentCodeO--;
+    }
+    if (N == -3)
+    {
+    	for (var I = CurrentCodeMin; I <= CurrentCodeMax; I++)
+    	{
+    	    if (I != CurrentCodeI)
+    	    {
+                CurrentCodeSetIdx(I, -1);
+            }
         }
+        CurrentCodeOptimize();
     }
     if (N > 0)
     {
-        CurrentCode[0] = N;
+        CurrentCodeI = N - 1 + CurrentCodeO;
     }
     Repaint();
     DisplayCurrent();
@@ -312,11 +306,6 @@ function SetFontStyle(Mode)
     {
         document.getElementById("xSET_FontN").value = "Negative";
     }
-    document.getElementById("xSET_FontB0").value = document.getElementById("xSET_FontB").value;
-    document.getElementById("xSET_FontI0").value = document.getElementById("xSET_FontI").value;
-    document.getElementById("xSET_FontU0").value = document.getElementById("xSET_FontU").value;
-    document.getElementById("xSET_FontS0").value = document.getElementById("xSET_FontS").value;
-    document.getElementById("xSET_FontN0").value = document.getElementById("xSET_FontN").value;
 
     Repaint();
     if (Mode >= 0)
@@ -456,10 +445,15 @@ function DisplayCurrent()
 {
     CurrentSave();
     
-    for (var I = 1; I <= 9; I++)
+    for (var I = 1; I <= ComplexSlots; I++)
     {
-        var Temp = NumToHex(CurrentCode[I]);
-        if (CurrentCode[0] == I)
+        var I_ = I - 1 + CurrentCodeO;
+        var Temp = NumToHex(CurrentCodeGetIdx(I_));
+        //if ((I_ < CurrentCodeMin) || (I_ > CurrentCodeMax))
+        //{
+        //    Temp = "#" + Temp + "#";
+        //}
+        if (CurrentCodeI == I_)
         {
             Temp = "[" + Temp + "]";
         }
@@ -525,18 +519,18 @@ function DisplayCurrent()
                 if (((C & 15) == II) && ((C & 240) == (I << 4)))
                 {
                     UniTable.rows[I + 1].cells[II + 1].className = Style1;
-                    UniTable.rows[I + 1].cells[II + 1].innerHTML = NumToHtml((C - (C & 255)) + (I << 4) + II, true);
+                    UniTable.rows[I + 1].cells[II + 1].innerHTML = NumToHtml((C - (C & 255)) + (I << 4) + II, true, 1, -1);
                 }
                 else
                 {
                     UniTable.rows[I + 1].cells[II + 1].className = Style0;
-                    UniTable.rows[I + 1].cells[II + 1].innerHTML = NumToHtml((C - (C & 255)) + (I << 4) + II, false);
+                    UniTable.rows[I + 1].cells[II + 1].innerHTML = NumToHtml((C - (C & 255)) + (I << 4) + II, false, 1, -1);
                 }
             }
             else
             {
                 UniTable.rows[I + 1].cells[II + 1].className = Style0;
-                UniTable.rows[I + 1].cells[II + 1].innerHTML = NumToHtml(((0 - C) - ((0 - C) & 255)) + (I << 4) + II, false);
+                UniTable.rows[I + 1].cells[II + 1].innerHTML = NumToHtml(((0 - C) - ((0 - C) & 255)) + (I << 4) + II, false, 1, -1);
             }
         }
     }
@@ -545,7 +539,7 @@ function DisplayCurrent()
 
     ObjView.style.fontFamily = XFontName;
     ObjView.style.fontSize = SET_FontSizeX + "pt";
-    ObjView.innerHTML = NumToHtml(C, false);
+    ObjView.innerHTML = NumToHtml(C, false, 2, -1);
 
     var EOL = "<br />";
     var X = "";
@@ -655,8 +649,7 @@ function DisplayCurrent()
         document.getElementById("CaseL").style["display"] = "none";
         document.getElementById("CaseT").style["display"] = "none";
     }
-    document.getElementById("CharCode1").value = NumToHex(C);
-    document.getElementById("CharCode2").value = NumToHex(C);
+    document.getElementById("CharCode").value = NumToHex(C);
     document.getElementById("CharInfo").innerHTML = X;
 }
 
@@ -673,31 +666,180 @@ function SetCase(Mode)
 }
 
 
+function NumToHtmlLines(X)
+{
+    var I = SET_MarginTop;
+    while (I > 0)
+    {
+        X = "&nbsp<br />" + X;
+        I--;
+    }
+    I = SET_MarginBot;
+    while (I > 0)
+    {
+        X = X + "<br />&nbsp";
+        I--;
+    }
+    return X;
+}
 
 // Change character number to HTML character display
-function NumToHtml(T, Sel)
+function NumToHtml(T, Sel, Slots, EmojiMode)
 {
+    var Emoji0 = true;
+    var Emoji1 = false;
+    var Emoji2 = false;
+    var Emoji3 = false;
+    var EmojiF = false;
+    var EmojiG = false;
+    var EmojiV = 1;
+
+    if (Slots == 1)
+    {
+        Emoji0 = SET_EmojiT0;
+        Emoji1 = SET_EmojiT1;
+        Emoji2 = SET_EmojiT2;
+        Emoji3 = SET_EmojiT3;
+        EmojiF = SET_EmojiTF;
+        EmojiG = SET_EmojiTG;
+        EmojiV = SET_EmojiTV;
+    }
+    if (Slots == 2)
+    {
+        Emoji0 = SET_EmojiP0;
+        Emoji1 = SET_EmojiP1;
+        Emoji2 = SET_EmojiP2;
+        Emoji3 = SET_EmojiP3;
+        EmojiF = SET_EmojiPF;
+        EmojiG = SET_EmojiPG;
+        EmojiV = SET_EmojiPV;
+    }
+
+
     var X = "";
     var I;
-    
-    for (I = 1; I <= 9; I++)
+
+    if (EmojiMode < 0)
     {
-        var C_ = CurrentCode[I];
-        if (CurrentCode[0] == I)
+        var X = "";
+        var X_ = [];
+        if (Slots > 0)
         {
-            C_ = T;
-        }
-        if (C_ >= 0)
-        {
-            if (SET_HtmlAsEntity)
+            var S0 = "";
+            if (EmojiV == 2)
             {
-                X = X + "&#" + C_ + ";";
+                S0 = "<br>";
+                X_[0] = (EmojiF ? NumToHtmlLines(NumToHtml(T, Sel, Slots, 15)) : "");
+                X_[1] = (Emoji0 ? NumToHtmlLines(NumToHtml(T, Sel, Slots,  0)) : "");
+                X_[2] = (EmojiG ? NumToHtmlLines(NumToHtml(T, Sel, Slots, 16)) : "");
+                X_[3] = (Emoji1 ? NumToHtmlLines(NumToHtml(T, Sel, Slots,  1)) : "");
+                X_[4] = (Emoji2 ? NumToHtmlLines(NumToHtml(T, Sel, Slots,  2)) : "");
+                X_[5] = (Emoji3 ? NumToHtmlLines(NumToHtml(T, Sel, Slots,  3)) : "");
             }
             else
             {
-                X = X + NumToChar(C_);
+                if (EmojiV == 1)
+                {
+                    if (SET_HtmlAsEntity)
+                    {
+                        S0 = "&#" + "32" + ";";
+                    }
+                    else
+                    {
+                        S0 = NumToChar(32);
+                    }
+                }
+                X_[0] = (EmojiF ? NumToHtml(T, Sel, Slots, 15) : "");
+                X_[1] = (Emoji0 ? NumToHtml(T, Sel, Slots,  0) : "");
+                X_[2] = (EmojiG ? NumToHtml(T, Sel, Slots, 16) : "");
+                X_[3] = (Emoji1 ? NumToHtml(T, Sel, Slots,  1) : "");
+                X_[4] = (Emoji2 ? NumToHtml(T, Sel, Slots,  2) : "");
+                X_[5] = (Emoji3 ? NumToHtml(T, Sel, Slots,  3) : "");
+            }
+            var WasChar = false;
+            for (var I = 0; I < 6; I++)
+            {
+                if (X_[I] != "")
+                {
+                    if (WasChar)
+                    {
+                        X = X + S0;
+                    }
+                    WasChar = true;
+                }
+                X = X + X_[I];
+            }
+            if (EmojiV != 2)
+            {
+                X = NumToHtmlLines(X);
             }
         }
+        else
+        {
+            X = NumToHtmlLines(NumToHtml(T, Sel, Slots, 0));
+        }
+        return X;
+    }
+
+    if (EmojiMode == 0)
+    {
+        var Imin = CurrentCodeMinPos();
+        var Imax = CurrentCodeMaxPos();
+        for (I = Imin; I <= Imax; I++)
+        {
+            var C_ = (Slots > 0) ? CurrentCodeGetIdx(I) : -1;
+            if (CurrentCodeI == I)
+            {
+                C_ = T;
+            }
+		    var CharList = GetCharByKey(C_);
+		    for (var II = 0; II < CharList.length; II++)
+		    {
+                if (SET_HtmlAsEntity)
+                {
+                    X = X + "&#" + CharList[II] + ";";
+                }
+                else
+                {
+                    X = X + NumToChar(CharList[II]);
+                }
+		    }
+        }
+    }
+    else
+    {
+	    var CharList = GetCharByKey(T);
+	    if (EmojiMode == 1)
+	    {
+	        CharList.push(0xFE00);
+	    }
+	    if (EmojiMode == 2)
+	    {
+	        CharList.push(0xFE01);
+	    }
+	    if (EmojiMode == 3)
+	    {
+	        CharList.push(0xFE02);
+	    }
+	    if (EmojiMode == 15)
+	    {
+	        CharList.push(0xFE0E);
+	    }
+	    if (EmojiMode == 16)
+	    {
+	        CharList.push(0xFE0F);
+	    }
+	    for (var II = 0; II < CharList.length; II++)
+	    {
+            if (SET_HtmlAsEntity)
+            {
+                X = X + "&#" + CharList[II] + ";";
+            }
+            else
+            {
+                X = X + NumToChar(CharList[II]);
+            }
+	    }
     }
     
     var Format1 = "";
@@ -734,18 +876,6 @@ function NumToHtml(T, Sel)
     }
 
 
-    I = SET_MarginTop;
-    while (I > 0)
-    {
-        X = "&nbsp<br />" + X;
-        I--;
-    }
-    I = SET_MarginBot;
-    while (I > 0)
-    {
-        X = X + "<br />&nbsp";
-        I--;
-    }
     return Format1 + X + Format2;
 }
 
@@ -767,12 +897,21 @@ var CharNames = [];
 var BlockNames = [];
 var BlockNamesL = 0;
 
+// Complex names
+var ComplexNames = [];
+var ComplexNamesL = 0;
+
 // Generation table and initializing other elements
 function Create()
 {
+    CurrentLoad();
     FillCharNames(CharNames);
     FillBlockNames(BlockNames);
     BlockNamesL = BlockNames.length;
+    FillComplexNames(ComplexNames);
+    FillComplexCodes();
+    FillComplexSuffix(ComplexSuffixCodes);
+    ComplexNamesL = ComplexNames.length;
 
     var Tbl = document.getElementById("UniTable");
     var TblR = Tbl.insertRow(0);
@@ -828,7 +967,10 @@ function Create()
     TblC.innerHTML = "&nbsp;";
     TblC.onclick = new Function("CharInfoPage(-1);");
 
+    ModuleInit();
+    ComplexEmojiBtn();
     HtmlAsEntityOptBtn();
+    AutoClearSlotsBtn();
     CharInfoDisplayCodeSet(-1);
 }
 
@@ -959,6 +1101,7 @@ function TextToHtml(X)
     X = ReplaceAll(X, "\'", "&apos;");
     X = ReplaceAll(X, "<", "&lt;");
     X = ReplaceAll(X, ">", "&gt;");
+    X = ReplaceAll(X, "\n", "<br>");
     return X;
 }
 
@@ -970,21 +1113,14 @@ function TextToHtmlSp(X)
     X = ReplaceAll(X, "<", "&lt;");
     X = ReplaceAll(X, ">", "&gt;");
     X = ReplaceAll(X, " ", "&nbsp;");
+    X = ReplaceAll(X, "\n", "<br>");
     return X;
 }
 
 
-function DispTextCode(N)
+function DispTextCode()
 {
-    var X = "";
-    if (N == 1)
-    {
-        X = document.getElementById("CharCode1").value;
-    }
-    if (N == 2)
-    {
-        X = document.getElementById("CharCode2").value;
-    }
+    var X = document.getElementById("CharCode").value;
     
     var ValidCode = true;
     var NegaCode1 = false;
@@ -1053,6 +1189,17 @@ function DispTextCode(N)
     }
 }
 
+
+function DispCharPageS(T)
+{
+    if (SET_AutoClearSlots)
+    {
+        CurrentSetSlot(-3);
+    }
+    return DispCharPage(T);
+}
+
+
 // Getting page with specified character number
 function DispCharPage(T)
 {
@@ -1060,6 +1207,10 @@ function DispCharPage(T)
     DisplayCurrent();
     return false;
 }
+
+var SearchTableItemsCode = [];
+var SearchTableItemsType = [];
+var SearchTableItemsMark = ["", "&nbsp;", "+", "-", "-"];
 
 // Searching for characters
 function FindChar(FindMode)
@@ -1080,7 +1231,7 @@ function FindChar(FindMode)
     var SearchPhrase = "";
     if (FindMode >= 0)
     {
-        // Of there is clear only
+        // If there is clear only
         if (FindMode == 0)
         {
             document.getElementById("FormCharFind").value = "";
@@ -1110,31 +1261,29 @@ function FindChar(FindMode)
     InsertHeaderToList(Tbl, 0);
 
     var I = 1;
+    var CharList = [];
 
     // Split text into chars
     if (FindMode == 1)
     {
-        var II = 1;
-        for (I = 0; I < SearchPhrase.length; I++)
-        {
-            var Key = SearchPhrase.codePointAt(I);
-            InsertCharToList(Tbl, II, Key);
-            if (Key >= 65536)
-            {
-                I++;
-            }
-            II++;
-        }
-        I = II - 1;
+        CharList = TextToChars(SearchPhrase);
     }
 
     // Parse hex code
     if ((FindMode == 3) || (FindMode == 4) || (FindMode == 5))
     {
-        var CharList = CodeToChars(SearchPhrase, FindMode - 2);
+        CharList = CodeToChars(SearchPhrase, FindMode - 2);
+    }
+
+    if ((FindMode == 1) || (FindMode == 3) || (FindMode == 4) || (FindMode == 5))
+    {
+        var CharType = [];
+    	FindComplex(CharList, CharType);
         var II = 1;
         for (I = 0; I < CharList.length; I++)
         {
+            SearchTableItemsCode[II] = CharList[I];
+            SearchTableItemsType[II] = CharType[I];
             var Key = CharList[I];
             InsertCharToList(Tbl, II, Key);
             II++;
@@ -1203,7 +1352,7 @@ function FindChar(FindMode)
             var CharNameItem = CharNames[Key];
             var Match = 0;
             
-            CharNameItemI = (CharNot[0] + CharNameItem[0] + CharNot[0] + CharNameItem[1] + CharNot[0] + CharNameItem[2] + CharNot[0]).toUpperCase();
+            var CharNameItemI = (CharNot[0] + CharNameItem[0] + CharNot[0] + CharNameItem[1] + CharNot[0] + CharNameItem[2] + CharNot[0]).toUpperCase();
             for (var II = 0; II < SearchPhraseArrayL; II++)
             {
                 if ((SearchPhraseArrayT[II] == 0))
@@ -1222,12 +1371,55 @@ function FindChar(FindMode)
             
             if ((Match == SearchPhraseArrayL) & (Match > 0))
             {
+                SearchTableItemsCode[I] = parseInt(Key);
+                SearchTableItemsType[I] = 1;
                 InsertCharToList(Tbl, I, parseInt(Key));
                 I++;
             }
         }
+        
+        for (var Key in ComplexNames)
+        {
+            var ComplexNameItem = ComplexNames[Key];
+            var Match = 0;
+            
+            var ComplexNameItemI = (CharNot[0] + ComplexNameItem[0] + CharNot[0] + ComplexNameItem[1] + CharNot[0] + ComplexNameItem[2] + CharNot[0]).toUpperCase();
+            for (var II = 0; II < SearchPhraseArrayL; II++)
+            {
+                if ((SearchPhraseArrayT[II] == 0))
+                {
+                    Match++;
+                }
+                if ((SearchPhraseArrayT[II] == 1) && (ComplexNameItemI.indexOf(SearchPhraseArray[II]) >= 0))
+                {
+                    Match++;
+                }
+                if ((SearchPhraseArrayT[II] == 2) && (ComplexNameItemI.indexOf(SearchPhraseArray[II]) < 0))
+                {
+                    Match++;
+                }
+            }
+            
+            if ((Match == SearchPhraseArrayL) & (Match > 0))
+            {
+                SearchTableItemsCode[I] = parseInt(Key) + ComplexKey;
+                SearchTableItemsType[I] = 2;
+                InsertCharToList(Tbl, I, parseInt(Key) + ComplexKey);
+                I++;
+                for (var III = 0; III < ComplexNameItem[6]; III++)
+                {
+                    SearchTableItemsCode[I] = ComplexNameItem[7][III];
+                    SearchTableItemsType[I] = 3;
+                    InsertCharToList(Tbl, I, ComplexNameItem[7][III]);
+                    I++;
+                }
+            }
+        }        
+        
         I--;
     }
+    SearchTableItemsCode[I + 1] = 0;
+    SearchTableItemsType[I + 1] = 0;
     InsertHeaderToList(Tbl, I + 1);
 }
 
@@ -1240,76 +1432,156 @@ function InsertHeaderToList(Tbl, I)
     TblRow.insertCell(3);
     TblRow.insertCell(4);
     TblRow.insertCell(5);
+    TblRow.insertCell(6);
+    TblRow.insertCell(7);
     TblRow.cells[0].align = "center";
     TblRow.cells[1].align = "center";
     TblRow.cells[2].align = "center";
     TblRow.cells[3].align = "center";
     TblRow.cells[4].align = "center";
     TblRow.cells[5].align = "center";
+    TblRow.cells[6].align = "center";
+    TblRow.cells[7].align = "center";
     TblRow.cells[0].vAlign = "center";
     TblRow.cells[1].vAlign = "center";
     TblRow.cells[2].vAlign = "center";
     TblRow.cells[3].vAlign = "center";
     TblRow.cells[4].vAlign = "center";
     TblRow.cells[5].vAlign = "center";
+    TblRow.cells[6].vAlign = "center";
+    TblRow.cells[7].vAlign = "center";
     TblRow.cells[0].className = "head";
     TblRow.cells[1].className = "head";
     TblRow.cells[2].className = "head";
     TblRow.cells[3].className = "head";
     TblRow.cells[4].className = "head";
     TblRow.cells[5].className = "head";
-    TblRow.cells[0].innerHTML = "Hex";
-    TblRow.cells[1].innerHTML = "Dec";
-    TblRow.cells[2].innerHTML = "Char";
-    TblRow.cells[3].innerHTML = "Block";
-    TblRow.cells[4].innerHTML = "Name";
-    TblRow.cells[5].innerHTML = "Other name";
+    TblRow.cells[6].className = "head";
+    TblRow.cells[7].className = "head";
+    TblRow.cells[0].innerHTML = "&nbsp;#&nbsp;";
+    TblRow.cells[1].innerHTML = "Hex";
+    TblRow.cells[2].innerHTML = "Dec";
+    TblRow.cells[3].innerHTML = "Char";
+    TblRow.cells[4].innerHTML = "Block";
+    TblRow.cells[5].innerHTML = "Name";
+    TblRow.cells[6].innerHTML = "Other name";
+    TblRow.cells[7].innerHTML = "&nbsp;#&nbsp;";
 }
 
 function InsertCharToList(Tbl, I, Key)
 {
-    var CharData;
-    if (Key in CharNames)
-    {
-        CharData = CharNames[Key];
-    }
-    else
-    {
-        CharData = ["", "", "", -1, -1, -1];
-    }
+    var CharData = GetCharData(Key);
     var TblRow = Tbl.insertRow(I);
+    var II;
     TblRow.insertCell(0);
     TblRow.insertCell(1);
     TblRow.insertCell(2);
     TblRow.insertCell(3);
     TblRow.insertCell(4);
     TblRow.insertCell(5);
+    TblRow.insertCell(6);
+    TblRow.insertCell(7);
     TblRow.cells[0].align = "center";
     TblRow.cells[1].align = "center";
     TblRow.cells[2].align = "center";
     TblRow.cells[3].align = "center";
     TblRow.cells[4].align = "center";
     TblRow.cells[5].align = "center";
+    TblRow.cells[6].align = "center";
+    TblRow.cells[7].align = "center";
     TblRow.cells[0].vAlign = "center";
     TblRow.cells[1].vAlign = "center";
     TblRow.cells[2].vAlign = "center";
     TblRow.cells[3].vAlign = "center";
     TblRow.cells[4].vAlign = "center";
     TblRow.cells[5].vAlign = "center";
-    TblRow.cells[0].innerHTML = "<span onClick=\"DispCharPage(" + Key + ");\" href=\"#\">" + NumToHex(Key) + "</span>";
-    TblRow.cells[1].innerHTML = "<span onClick=\"DispCharPage(" + Key + ");\" href=\"#\">" + Key + "</span>";
-    TblRow.cells[2].innerHTML = "<span onClick=\"DispCharPage(" + Key + ");\" href=\"#\">" + NumToHtml(Key, false) + "</span>";
-    TblRow.cells[3].innerHTML = "<span onClick=\"DispCharPage(" + Key + ");\" href=\"#\">" + (CharData[0] != "" ? TextToHtml(CharData[0]) : "&nbsp;") + "</span>";
-    TblRow.cells[4].innerHTML = "<span onClick=\"DispCharPage(" + Key + ");\" href=\"#\">" + (CharData[1] != "" ? TextToHtml(CharData[1]) : "&nbsp;") + "</span>";
-    TblRow.cells[5].innerHTML = "<span onClick=\"DispCharPage(" + Key + ");\" href=\"#\">" + (CharData[2] != "" ? TextToHtml(CharData[2]) : "&nbsp;") + "</span>";
-    TblRow.cells[0].onclick = new Function("DispCharPage(" + Key + ");");
-    TblRow.cells[1].onclick = new Function("DispCharPage(" + Key + ");");
-    TblRow.cells[2].onclick = new Function("DispCharPage(" + Key + ");");
-    TblRow.cells[3].onclick = new Function("DispCharPage(" + Key + ");");
-    TblRow.cells[4].onclick = new Function("DispCharPage(" + Key + ");");
-    TblRow.cells[5].onclick = new Function("DispCharPage(" + Key + ");");
-    TblRow.cells[2].style.fontFamily = XFontName;
+    TblRow.cells[6].vAlign = "center";
+    TblRow.cells[7].vAlign = "center";
+    TblRow.cells[0].innerHTML = "<span onClick=\"RowExpandCollapse(" + I + ");\" href=\"#\">X</span>";
+    TblRow.cells[1].innerHTML = "<span onClick=\"DispCharPageS(" + Key + ");\" href=\"#\">" + CharNumToHex(Key) + "</span>";
+    TblRow.cells[2].innerHTML = "<span onClick=\"DispCharPageS(" + Key + ");\" href=\"#\">" + CharNumToDec(Key) + "</span>";
+    TblRow.cells[3].innerHTML = "<span onClick=\"DispCharPageS(" + Key + ");\" href=\"#\">" + NumToHtml(Key, false, 0, -1) + "</span>";
+    TblRow.cells[4].innerHTML = "<span onClick=\"DispCharPageS(" + Key + ");\" href=\"#\">" + (CharData[0] != "" ? TextToHtml(CharData[0]) : "&nbsp;") + "</span>";
+    TblRow.cells[5].innerHTML = "<span onClick=\"DispCharPageS(" + Key + ");\" href=\"#\">" + (CharData[1] != "" ? TextToHtml(CharData[1]) : "&nbsp;") + "</span>";
+    TblRow.cells[6].innerHTML = "<span onClick=\"DispCharPageS(" + Key + ");\" href=\"#\">" + (CharData[2] != "" ? TextToHtml(CharData[2]) : "&nbsp;") + "</span>";
+    TblRow.cells[7].innerHTML = "<span onClick=\"RowExpandCollapse(" + I + ");\" href=\"#\">X</span>";
+    TblRow.cells[0].innerHTML = SearchTableItemsMark[SearchTableItemsType[I]];
+    TblRow.cells[7].innerHTML = SearchTableItemsMark[SearchTableItemsType[I]];
+    TblRow.cells[0].onclick = new Function("RowExpandCollapse(" + I + ");");
+    TblRow.cells[1].onclick = new Function("DispCharPageS(" + Key + ");");
+    TblRow.cells[2].onclick = new Function("DispCharPageS(" + Key + ");");
+    TblRow.cells[3].onclick = new Function("DispCharPageS(" + Key + ");");
+    TblRow.cells[4].onclick = new Function("DispCharPageS(" + Key + ");");
+    TblRow.cells[5].onclick = new Function("DispCharPageS(" + Key + ");");
+    TblRow.cells[6].onclick = new Function("DispCharPageS(" + Key + ");");
+    TblRow.cells[7].onclick = new Function("RowExpandCollapse(" + I + ");");
+    TblRow.cells[3].style.fontFamily = XFontName;
+    switch (SearchTableItemsType[I])
+    {
+        case 1:
+        case 2:
+            TblRow.style.display = "";
+            TblRow.style.display = "";
+            break;
+        case 3:
+            II = I;
+            while (SearchTableItemsType[II] == 3)
+            {
+                Tbl.rows[II].cells[0].style.display = "none";
+                Tbl.rows[II].cells[7].style.display = "none";
+                II--;
+            }
+            II++;
+            Tbl.rows[II].cells[0].style.display = "";
+            Tbl.rows[II].cells[7].style.display = "";
+            Tbl.rows[II].cells[0].rowSpan = (I - II + 1);
+            Tbl.rows[II].cells[7].rowSpan = (I - II + 1);
+            TblRow.style.display = "none";
+            break;
+    }
 }
+
+
+function RowExpandCollapse(N)
+{
+    var Tbl = document.getElementById("SearchTable");
+    var I = N + 1;
+    switch (SearchTableItemsType[N])
+    {
+        case 2:
+            SearchTableItemsType[N] = 4;
+            Tbl.rows[N].style.display = "none";
+            while (SearchTableItemsType[I] == 3)
+            {
+                Tbl.rows[I].style.display = "";
+                I++;
+            }
+            break;
+        case 3:
+            while (SearchTableItemsType[N] == 3)
+            {
+                N--;
+            }
+            I = N + 1
+            Tbl.rows[N].style.display = "";
+            SearchTableItemsType[N] = 2;
+            while (SearchTableItemsType[I] == 3)
+            {
+                Tbl.rows[I].style.display = "none";
+                I++;
+            }
+            break;
+        case 4:
+            SearchTableItemsType[N] = 2;
+            while (SearchTableItemsType[I] == 3)
+            {
+                Tbl.rows[I].style.display = "none";
+                I++;
+            }
+            break;
+    }
+}
+
 
 // Inserting the text in the text box
 function InsertAtCursor(myField, myValue)
@@ -1391,12 +1663,33 @@ function Repaint()
         for (var I = 1; I < (RowCount - 1); I++)
         {
             var TblRow = Tbl.rows[I];
-            var N = parseInt(TblRow.cells[1].innerText);
-            TblRow.cells[2].innerHTML = "<span onClick=\"DispCharPage(" + N + ");\">" + NumToHtml(N, false) + "</span>";
-            TblRow.cells[2].style.fontFamily = XFontName;
+            TblRow.cells[3].innerHTML = "<span onClick=\"DispCharPage(" + SearchTableItemsCode[I] + ");\">" + NumToHtml(SearchTableItemsCode[I], false, 0, -1) + "</span>";
+            TblRow.cells[3].style.fontFamily = XFontName;
         }
     }
 }
+
+function AutoClearSlotsBtn()
+{
+    document.getElementById("xSET_AutoClearSlots1").value = "Yes";
+    document.getElementById("xSET_AutoClearSlots0").value = "No";
+    if (SET_AutoClearSlots == 1)
+    {
+        document.getElementById("xSET_AutoClearSlots1").value = "[Yes]";
+    }
+    if (SET_AutoClearSlots == 0)
+    {
+        document.getElementById("xSET_AutoClearSlots0").value = "[No]";
+    }
+}
+
+function AutoClearSlotsOpt(X)
+{
+    SET_AutoClearSlots = X;
+    SettingsSave();
+    AutoClearSlotsBtn();
+}
+
 
 function HtmlAsEntityOptBtn()
 {
@@ -1444,9 +1737,9 @@ function WriteBoxChar(X)
     if ((Math.abs(X) == 2) || (Math.abs(X) == 3))
     {
         C = "";
-        for (var I = 1; I <= 9; I++)
+        for (var I = CurrentCodeMin; I <= CurrentCodeMax; I++)
         {
-            var C_ = CurrentCode[I];
+            var C_ = CurrentCodeGetIdx(I);
             if (C_ >= 0)
             {
                 C = C + NumToChar(C_);

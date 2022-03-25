@@ -13,17 +13,77 @@ There is simple application, wchich has following abilities and purposes:
 
 This application should work on every HTML5\-complaint browser and can be run by opening the **unicode\.htm** file\.
 
-It uses data generated from the two Unicode official files for character definitions:
+The application is available online from the address: [https://andrzejlisek\.github\.io/Unicode/unicode\.htm](https://andrzejlisek.github.io/Unicode/unicode.htm "https://andrzejlisek.github.io/Unicode/unicode.htm")
+
+# Character data
+
+Application uses data generated from the four Unicode official files:
 
 
 * [https://unicode\.org/Public/UNIDATA/Blocks\.txt](https://unicode.org/Public/UNIDATA/Blocks.txt "https://unicode.org/Public/UNIDATA/Blocks.txt")
 * [https://unicode\.org/Public/UNIDATA/UnicodeData\.txt](https://unicode.org/Public/UNIDATA/UnicodeData.txt "https://unicode.org/Public/UNIDATA/UnicodeData.txt")
+* [https://unicode\.org/Public/emoji/??\.?/emoji\-sequences\.txt](https://unicode.org/Public/emoji/14.0/emoji-sequences.txt "https://unicode.org/Public/emoji/14.0/emoji-sequences.txt")
+* [https://unicode\.org/Public/emoji/??\.?/emoji\-zwj\-sequences\.txt](https://unicode.org/Public/emoji/14.0/emoji-zwj-sequences.txt "https://unicode.org/Public/emoji/14.0/emoji-zwj-sequences.txt")
 
-The application contains the generator\.htm file, which helps in updating the character definitions\.
+In place of the **??\.?** there is version number of emoji data used to generate complex character data\.
 
-The application is available online from the address: [https://andrzejlisek\.github\.io/Unicode/unicode\.htm](https://andrzejlisek.github.io/Unicode/unicode.htm "https://andrzejlisek.github.io/Unicode/unicode.htm")
+## Updating chars\.js
 
-# Basic parameters
+Character definition are in the **char\.js** file as Javascript functions, which fills in array variables\.
+
+To update the **char\.js** file, when the Unicode Consortium publish newer character names or emoji names, run the **generator\.htm** file\. You can see the five text boxes\. Above each box, there is link to appropriate file published by the Unicode Consortium\.
+
+The two first files, **Blocks\.txt** and **UnicodeData\.txt** has constant link, so you can simply open the links in new tab and copy downloaded text into appropriate text box\.
+
+The files containing the complex character definitions, especially emoji, are published inside the version number subdirectories\. To check the number of newest version, open the **Emoji version** link and check the name of newest subdirectory\. Then you have to input the name into small text box\.
+
+After correcting the version, tou can open the **emoji\-sequences\.txt** and **emoji\-zwj\-sequences\.txt** files using the links below the **Emoji version** link\. Hou vahe to copy the downloaded contents of these files into the text boxes\.
+
+Finally, click the **char\.js** button\. In the last text box, there will be generated code, which you have to paste into the **char\.js** file in the place of existing **char\.js** contents\.
+
+# Application modules
+
+The Unicode application is splitted into modules separated by horizontal lines\. You can change order of the modules, by the default order, the modules are as following:
+
+
+1. Parameters\.
+2. Character finder\.
+3. Browser navigator\.
+4. Browser table\.
+5. Character information\.
+6. Character slots\.
+7. Format attributes\.
+8. Text box\.
+
+# Elementary and complex characters
+
+Some Unicode characters, especially some pictograms, consists of several elementary characters and are represented as sequence of elementary characters\. Most operating systems displays such sequence as single complex character\. Some elementary characters, such a variation selectors and zero\-width joiner are designed for make complex characters only\.
+
+Complex character examples
+
+## Examples
+
+There are examples of complex characters\. The rainbow flag pictogram consists of the following elementary characters including variation selector and zero\-width joiner\.
+
+
+1. **01F3F3** \- Waving white flag
+2. **FE0F** \- Variation selector\-16
+3. **200D** \- Zero with joiner
+4. **01F308** \- Rainbow
+
+The colorful speech bubble can be achieved by speech bubble pictogram with variation selector:
+
+
+1. **01F5E8** \- Left speech bubble
+2. **FE0F** \- Variation selector\-16
+
+Some character pais also may create complex characters\. For example, the Japan flag can be achieved by this sequence:
+
+
+1. **01F1EF** \- Regional indicator symbol letter J
+2. **01F1F5** \- Regional indicator symbol letter P
+
+# Parameters
 
 At the top of the page, there are basic parameters\.
 
@@ -33,8 +93,11 @@ The parameters has the following meaning:
 
 
 * **Display** \- Select the way of displaying characters in HTML code\. It may affect in some browsers\. Theoretically, both ways gives the same result\.
-  * **Entity** \- Use &\#x; to write character in table and preview
-  * **Raw** \- Write character directly in code in table and preview
+  * **Entity** \- Use &\#x; to write character in table and preview\.
+  * **Raw** \- Write character directly in code in table and preview\.
+* **Arrange** \- Enables or disables the module layout arrangement\.
+  * **Yes** \- The separators are thick and you can swap any two modules by clicking the separator\.
+  * **No** \- The separator are thin and you can not change the module order\.
 * **Font family** \- Write system font name or downloadable font definition\. You can write any font name existing on system, such as Arial, Courier\.
 * **Font preset** \- Select one of standard font families, available in every operating system and web browser\.
   * **Serif** \- serif
@@ -42,10 +105,22 @@ The parameters has the following meaning:
   * **Cursive** \- cursive
   * **Fantasy** \- fantasy
   * **Mono** \- monospace
-* **Size in table** \- Font size in character table\.
-* **Size in preview** \- Font size in character preview shown below table\.
-* **Size in text box** \- Font size in text box at the bottop of this page\.
-* **Prefix/Suffix** \- The text before and after character\. This is usabe to view character connected with other character, for example, to view diacritic charater used with the letter\.
+* **Size in table** \- Font size in browser table bodule\.
+* **Size in info** \- Font size in character information module\.
+* **Size in text box** \- Font size in text box module\.
+* **Variants in table** \- Displaying character in browser table\. You can view character variants using variation selectors\. The buttons works as multistate button as following:
+  * **Txt** \- The text variant of the pictogram using **Variation Selector\-15**\.
+  * **Std** \- Character without variation selector, displays the default shape\.
+  * **Img** \- The image variant of the pictogram using **Variation Selector\-16**\.
+  * **CJK1** \- The first variant of the character using **Variation Selector\-1**\.
+  * **CJK2** \- The second variant of the character using **Variation Selector\-2**\.
+  * **CJK3** \- The third variant of the character using **Variation Selector\-3**\.
+  * **Layout** \- Character layout while at least two ways of display are enabled:
+    * **H** \- Horizontal without space\.
+    * **H\+S** \- Horizontal with space\.
+    * **V** \- Vertical\.
+* **Variants in info** \- Displaying character in character information\. Works in the same way as the **Variants in table**\.
+* **Prefix/Suffix** \- The text before and after character\. This is usable to view character connected with other character, for example, to view diacritic charater used with the letter\.
 * **Margin top/bottom** \- The number of blank lines above and below the character\. Some characters can have glyph outside of the box and the free space is needed to view such character clearly\.
 * **Char code** \- Enable or disable character codes in character information:
   * **Hex** \- Hexadecimal number\.
@@ -60,13 +135,137 @@ The parameters has the following meaning:
 
 Every parameter will be saved and restored after application restart\.
 
-# Browsing and viewing the characters
+# Complex characters
 
-The main puspose of the application is browsing the Unicode characters\. The browser shows one page consisting of 256 characters\.
+Some Unicode characters, especially some pictograms, consists of several elementary characters and are represented as sequence of elementary characters\. Most operating systems displays such sequence as single complex character\. Some elementary characters, such a variation selectors and zero\-width joiner are designed for make complex characters only\.
+
+## Examples
+
+There are examples of complex characters\. The rainbow flag pictogram consists of the following elementary characters including variation selector and zero\-width joiner\.
+
+
+1. **01F3F3** \- Waving white flag
+2. **FE0F** \- Variation selector\-16
+3. **200D** \- Zero with joiner
+4. **01F308** \- Rainbow
+
+The colorful speech bubble can be achieved by speech bubble pictogram with variation selector:
+
+
+1. **01F5E8** \- Left speech bubble
+2. **FE0F** \- Variation selector\-16
+
+Some character pais also may create complex characters\. For example, the Japan flag can be achieved by this sequence:
+
+
+1. **01F1EF** \- Regional indicator symbol letter J
+2. **01F1F5** \- Regional indicator symbol letter P
+
+# Character finder
+
+You can find any character from text or character by name using the search field:
+
+![](readme_pics/Search0.png "")
+
+You can find characters by the following ways:
+
+
+* Extract character from text\.
+* Find by name\.
+* Decode hex code \(not to be confused with character number\)\.
+
+## Find by char
+
+Paste or write text containing character, which you want to find, to the **Find** field and click the **Char** button\. There will be shown table, which has the same number of rows as the length of pasted text\. Every row has information about one elementary character\.
+
+![](readme_pics/Search1.png "")
+
+If you input \(paste\) text containing complex characters, there will be shown the complex characters in the find result table\.
+
+![](readme_pics/Search2.png "")
+
+In such case, you can display elementary character by clicking the **\+** sign in the **\#** column\.
+
+![](readme_pics/Search2-exp.png "")
+
+If you click the **\-** sign in the **\#** column, the elementary character list will be returned to complex character\.
+
+## Find by name
+
+Most Unicode characters has the following attributes:
+
+
+* Block name
+* Main character name
+* Other character name
+
+You can find by value of on from the three attributes\. The characters will be searched according the rules:
+
+
+* The phrases are splitted into words by spaces\.
+* If word does not begin with **~** ir **\!** character, the word must exist in at least one of mentioned character attributes\.
+* If word begins with **~** ir **\!** character, the word must not exist in all of mentioned character attributes\.
+
+Input the phrase of the name in the **Find** field and click the **Name** button\. There will be show table containing all characters, which name contains the text in the **Find** field\.
+
+The search is not case sensitive, in the most cases, you will search the characters by words, which must exists\.
+
+![](readme_pics/Search3.png "")
+
+Some characters are defined as complex character in the **emoji\-sequences\.txt** file consisting of one elementary character, so some characters are displayes as complex characters and works as every complex character\.
+
+![](readme_pics/Search3-exp.png "")
+
+You can include other words by spaces:
+
+![](readme_pics/Search4.png "")
+
+Using the **~** or **\!** character, you can exclude some words:
+
+![](readme_pics/Search5.png "")
+
+## Clear field and table
+
+You can click the **Clear** button to disappear the find result table and clear the **Find** field\.
+
+## Result table
+
+If you click the **Char** or **Name** button, there will be show the find result table\. If you click the row in the table, you will be redirected to the character, which is in the row\. To clear the result table, you can click the **Clear** button\. If you select any complex character, the character will be occupy more slots beginning from the current\.
+
+## Clear slots
+
+Most complex characters occupies more than one slot\. If you browse characters using character finder module, you can automatically clear other slots when you select other character\. You can set this property int the **Clear slots** field by clicking the **Yes** or **No** button\.
+
+## Decoding UTF sequence
+
+Using the **Find** field, you can decode any UTF\-8 or UTF\-16 byte sequence\. The sequence must be written in the **Find** field as hexadecimal numbers, without BOM\. Characters other than digits and letters from **A** to **F** will be ignored \(letters can be both lowercase or uppercase\)\. The sequence must contain even number of hexadecimal numbers\. To decode, you have to click one of the buttons below:
+
+
+* **UTF\-8** \- Decode UTF\-8 sequence\.
+* **UTF\-16LE** \- Decode UTF\-16 sequence using little endian byte order\.
+* **UTF\-16BE** \- Decode UTF\-16 sequence using big endian byte order\.
+
+There is example showing decoding the same character sequence written using all supported encodings\.
+
+The UTF\-8 sequence:
+
+![](readme_pics/Search11.png "")
+
+The UTF\-16 little endian sequence:
+
+![](readme_pics/Search12.png "")
+
+The UTF\-16 big endian sequence:
+
+![](readme_pics/Search13.png "")
+
+# Browser table and navigator
+
+The main puspose of the application is browsing the Unicode characters\. The browser table shows one page consisting of 256 characters\.
 
 ![](readme_pics/Table1.png "")
 
-The full Unicode character set consists of 17 planes, every plane consists of 256 pages\. The above and below the character page, there are the 10\-button set, which allows to navigate between planes and pages\.
+The full Unicode character set consists of 17 planes, every plane consists of 256 pages\. In the navigator module, there are the 10\-button set, which allows to navigate between planes and pages\.
 
 ![](readme_pics/Navi1.png "")
 
@@ -97,7 +296,7 @@ You can also unselect character by clicking on the table header\. This feature i
 
 ## Occupying box
 
-The gray box behind character represents the area, whis is occupied by the character\. Some character glyphs may be outside the occupying box\.
+In all modules, where character is showv, gray box behind character represents the area, whis is occupied by the character\. Some character glyphs may be outside the occupying box\.
 
 ![](readme_pics/Box11.png "")
 
@@ -121,9 +320,16 @@ For better readibility and visibility such characters, increase the margin in **
 
 ![](readme_pics/Box32.png "")
 
-## Character info
+# Character information
 
-To view zoomed character and character name, you can click the character in the character table or select character using navigation buttons above or below character table\.
+To view zoomed character and character name, you can select the character by these ways:
+
+
+1. Navigate to the character using navigator buttons or inputting the character number\.
+2. Click the character in the browser table\.
+3. Click the item in the character finder results\.
+
+After selecting the character, the information will be shown in the information module\.
 
 ![](readme_pics/CharInfo.png "")
 
@@ -134,7 +340,7 @@ The details will be displayed below the table and lower navigation buttons\. Thi
 * Number in hexadecimal system for elementary characters or number sequence for complex characters\.
 * Block name \(the named set consisting of some character serie\) and code range \(which allows to redirect to first and last character\)\.
 * Character names\.
-* Zoomed in character \(the size can be changed in the **Size in preview** field\)\.
+* Zoomed in character \(the size can be changed in the **Size in info** field\)\.
 
 Some character has defined the lowercase, uppercase or title equivalent\. If you viewing such character, below the preview, there can be shown one or two of the following buttons:
 
@@ -143,7 +349,89 @@ Some character has defined the lowercase, uppercase or title equivalent\. If you
 * **Lower** \- Redirects to the lowercase equivalent\.
 * **Title** \- Redirects to the equivalent suitable to use in title\.
 
-## Font attributes
+## Complex character info
+
+In the character information, if there is displayed complex character or character sequence, the character code consists of all elementary character codes splitted by **&#124;** character\. The bolded part of character code sequence indicates character selected in the current slot\. The character information also describes the character selected in the current slot\.
+
+Character information, when the slot of first elementary character is selected:
+
+![](readme_pics/Complex41.png "")
+
+Character information, when the slot of second elementary character is selected:
+
+![](readme_pics/Complex42.png "")
+
+# Browser slots
+
+The character browser has independed slots, which can be browsed using eight buttons in the slot module\. The **<** and **>** buttons allows to scroll the slots\. If tharacter number ends with double underscore, this slot has selected page, but character is not selected\. The characters displayed are the character composited from all slots with selected characters\. If you want to browse elementary characters, you have to be sure, that on every other slot character is not selected\. You can unselect character by clicking on the table header or input code ending of double underscore, double minus or double asterisk\.
+
+![](readme_pics/Complex.png "")
+
+You can change the current slot by clicking the buttons\. The current slot selection will be indicated by **\[** and **\]** characters\. You can scroll the slots by clicking the **<** and **>** buttons\.
+
+If there is selected other page than **00** on the other slots, you will also browse the elementary characters\. For example, you can use the variation selectors on the page **FE**\. You can prepare the page on the next slot\.
+
+![](readme_pics/Complex11.png "")
+
+On the page **F3** on the plane **01**, you will see the standard version of pictograms\.
+
+![](readme_pics/Complex12.png "")
+
+If you select the **Variation selector 16**, you can see another version of some characters\.
+
+![](readme_pics/Complex21.png "")
+
+![](readme_pics/Complex22.png "")
+
+By the same way, the **Variation selector 15** also changes the pictogram fashion\.
+
+![](readme_pics/Complex32.png "")
+
+![](readme_pics/Complex33.png "")
+
+# Character variants
+
+In most operating systems and web browsers, there are implemented two variants of most pictogram characters:
+
+
+* **Text** \- display as ordinary monochrome charcter, which is picture\-shaped\.
+* **Image** \- display as colorful image\.
+
+Some CJK characters has up to three variants:
+
+
+* **CJK1** \- Variant 1
+* **CJK2** \- Variant 2
+* **CJK3** \- Variant 3
+
+The default variants varies from character to character\.
+
+You can force to display text or image variant for pictogram or force one of the three variants of CJK character\.
+
+You can display possible variants using the buttons in **Variants in table** and **Variants in info** fields\. Both fields has the same work mechanism, but the first works in the table, the second works in the info\.
+
+In order to enable or disable the text or image variants of the pictogram character, click the **Txt** or **Img** button\. The **Std** button allows show or hide the standard display\.
+
+In order to display other variants of the CJK character, click the **CJK1** or **CJK2** or **CJK3** button\.
+
+Displaying text/image and CJK variants at once is not possible and it makes no sense, because none of pictogram character has CJK variants and none of CJK characters has text/image variants\.
+
+The enforcement is made using variation selector characters:
+
+
+* **Text** \- FE0E \(Variation Selector\-15\)
+* **Image** \- FE0F \(Variation Selector\-16\)
+* **CJK1** \- FE00 \(Variation Selector\-1\)
+* **CJK2** \- FE01 \(Variation Selector\-2\)
+* **CJK3** \- FE02 \(Variation Selector\-3\)
+
+The character composition using characters from the other slots are displayed on standard variant only using **Std** button\. Other variants uses character from current slot only\.
+
+There is page 01F3 display using the text and image variants, without the standard variant\.
+
+![](readme_pics/Complex50.png "")
+
+# Font attributes
 
 You can set the font attributes using the buttons above and below the character table\.
 
@@ -171,151 +459,6 @@ The font style will be affected in the following places:
 * Text box field \(described below\)\.
 
 The **Positive**/**Negative** attribute will help to distinguish the colorful pictogram characters from regular characters, which colors changes according the attribute\. If the pictogram character has colors similar to occupying box or background, the **Positive**/**Negative** switching may help to clearly view the pictogram
-
-# Complex characters
-
-Some Unicode characters, especially some pictograms, consists of several elementary characters and are represented as sequence of elementary characters\. Most operating systems displays such sequence as single complex character\. Some elementary characters, such a variation selectors and zero\-width joiner are designed for make complex characters only\.
-
-## Examples
-
-There are examples of complex characters\. The rainbow flag pictogram consists of the following elementary characters including variation selector and zero\-width joiner\.
-
-
-1. **01F3F3** \- Waving white flag
-2. **FE0F** \- Variation selector\-16
-3. **200D** \- Zero with joiner
-4. **01F308** \- Rainbow
-
-The colorful speech bubble can be achieved by speech bubble pictogram with variation selector:
-
-
-1. **01F5E8** \- Left speech bubble
-2. **FE0F** \- Variation selector\-16
-
-Some character pais also may create complex characters\. For example, the Japan flag can be achieved by this sequence:
-
-
-1. **01F1EF** \- Regional indicator symbol letter J
-2. **01F1F5** \- Regional indicator symbol letter P
-
-## Browser slots
-
-The character browser has 9 independed slots indicated as buttons below the character information\. Every button shows the character number selected in this slot\. If tharacter number ends with double underscore, this slot has selected pade, but character is not selected\. The characters displayed are the character composited from all slots with selected characters\. If you want to browse elementary characters, you have to be sure, that on every other slot character is not selected\. You can unselect character by clicking on the table header or input code ending of double underscore, double minus or double asterisk\.
-
-![](readme_pics/Complex.png "")
-
-You can change the current slot by clicking the buttons\. The current slot selection will be indicated by **\[** and **\]** characters\. You can move character selection in all slots by clicking the **<** and **>** buttons\.
-
-If there is selected other page than **00** on the other slots, you will also browse the elementary characters\. For example, you can use the variation selectors on the page **FE**\. You can prepare the page on the next slot\.
-
-![](readme_pics/Complex11.png "")
-
-On the page **F3** on the plane **01**, you will see the standard version of pictograms\.
-
-![](readme_pics/Complex12.png "")
-
-If you select the Variation selector 16, you can see another version of some characters\.
-
-![](readme_pics/Complex21.png "")
-
-![](readme_pics/Complex22.png "")
-
-By the same way, the Variation selector 15 also changes the pictogram fashion\.
-
-![](readme_pics/Complex31.png "")
-
-![](readme_pics/Complex32.png "")
-
-## Complex character info
-
-In the character information, if there is displayed complex character or character sequence, the character code consists of all elementary character codes splitted by **&#124;** character\. The bolded part of character code sequence indicates character selected in the current slot\. The character information also describes the character selected in the current slot\.
-
-Character information, when the slot of first elementary character is selected:
-
-![](readme_pics/Complex41.png "")
-
-Character information, when the slot of second elementary character is selected:
-
-![](readme_pics/Complex42.png "")
-
-# Finding the characters
-
-You can find any character from text or character by name using the search field:
-
-![](readme_pics/Search0.png "")
-
-## Find by char
-
-Paste or write text containing character, which you want to find, to the **Find** field and click the **Char** button\. There will be shown table, which has the same number of rows as the length of pasted text\. Every row has information about one elementary character\.
-
-![](readme_pics/Search1.png "")
-
-If you input \(paste\) the complex character, there will be shown the elementary characters in the find result table\.
-
-![](readme_pics/Search2.png "")
-
-## Find by name
-
-Most Unicode characters has the following attributes:
-
-
-* Block name
-* Main character name
-* Other character name
-
-You can find by value of on from the three attributes\. The characters will be searched according the rules:
-
-
-* The phrases are splitted into words by spaces\.
-* If word does not begin with **~** ir **\!** character, the word must exist in at least one of mentioned character attributes\.
-* If word begins with **~** ir **\!** character, the word must not exist in all of mentioned character attributes\.
-
-Input the phrase of the name in the **Find** field and click the **Name** button\. There will be show table containing all characters, which name contains the text in the **Find** field\.
-
-The search is not case sensitive, in the most cases, you will search the characters by words, which must exists\.
-
-![](readme_pics/Search3.png "")
-
-You can include other words by spaces:
-
-![](readme_pics/Search4.png "")
-
-Using the **~** or **\!** character, you can exclude some words:
-
-![](readme_pics/Search5.png "")
-
-## Clear field and table
-
-You can click the **Clear** button to disappear the find result table and clear the **Find** field\.
-
-## Result table
-
-If you click the **Char** or **Name** button, there will be show the find result table\. If you click the row in the table, you will be redirected to the character, which is in the row\. To clear the result table, you can click the **Clear** button\.
-
-# Decoding UTF
-
-Using the **Find** field, you can decode any UTF\-8 or UTF\-16 byte sequence\. The sequence must be written in the **Find** field as hexadecimal numbers\. Characters other than digits and letters from **A** to **F** will be ignored\. The sequence must contain even number of hexadecimal numbers\. To decode, you have to click one of the buttons below:
-
-
-* **UTF\-8** \- Decode UTF\-8 sequence\.
-* **UTF\-16LE** \- Decode UTF\-16 sequence using little endian byte order\.
-* **UTF\-16BE** \- Decode UTF\-16 sequence using big endian byte order\.
-
-## Decode examples
-
-The below, there is show decoding the same character sequence written using all supported encodings\.
-
-The UTF\-8 sequence:
-
-![](readme_pics/Search11.png "")
-
-The UTF\-16 little endian sequence:
-
-![](readme_pics/Search12.png "")
-
-The UTF\-16 big endian sequence:
-
-![](readme_pics/Search13.png "")
 
 # Text box
 
@@ -539,23 +682,6 @@ woff2?U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2
 The font code is fully generated\. The last step is paste this code into text box and click the **Font** button\. If the code is created correctly, the characters will be displayed using this font\.
 
 ![](readme_pics/TableFont.png "")
-
-# Update character names
-
-If the new version of Unicode will be released, and the character names will be outdated, you can manually update the character names\.
-
-Open the **generator\.htm** file, its contains the three text fields\. The generate and update procedure is following:
-
-
-1. Open the [https://unicode\.org/Public/UNIDATA/Blocks\.txt](https://unicode.org/Public/UNIDATA/Blocks.txt "https://unicode.org/Public/UNIDATA/Blocks.txt") contents in separate tab or window by clicking the **Blocks\.txt** link\.
-2. Copy the file contents into the text field, below the **Blocks\.txt** link\.
-3. Open the [https://unicode\.org/Public/UNIDATA/UnicodeData\.txt](https://unicode.org/Public/UNIDATA/UnicodeData.txt "https://unicode.org/Public/UNIDATA/UnicodeData.txt") contents in separate tab or window by clicking the **UnicodeData\.txt** link\.
-4. Copy the file contents into the text field, below the **UnicodeData\.txt** link\.
-5. Click the **unicode\.js** button\. In the text field below the button, there will apear generated code\.
-6. Open the **unicode\.js** file in any notepad application\.
-7. Clear the current **unicode\.js** contents\.
-8. Copy the contents of the last text field below the **unicode\.js** button into the notepad application as new contents of **unicode\.js** file\.
-9. Save the **unicode\.js** file\.
 
 
 

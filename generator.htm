@@ -7,15 +7,27 @@
     <body>
         <form name="MainForm" accept-charset="UTF-8">
             <p align="center">
-                <a href="https://unicode.org/Public/UNIDATA/Blocks.txt">Blocks.txt</a><br/>
+                <a href="https://unicode.org/Public/UNIDATA/Blocks.txt" target="_blank">Blocks.txt</a><br/>
                 <textarea id="Input1" style="width:100%" rows="10"></textarea>
             </p>
             <p align="center">
-                <a href="https://unicode.org/Public/UNIDATA/UnicodeData.txt">UnicodeData.txt</a><br/>
+                <a href="https://unicode.org/Public/UNIDATA/UnicodeData.txt" target="_blank">UnicodeData.txt</a><br/>
                 <textarea id="Input2" style="width:100%" rows="10"></textarea>
             </p>
             <p align="center">
-                <input type="button" value="unicodechar.js" onclick="Generate()"><br/>
+                <a href="https://unicode.org/Public/emoji/" target="_blank">Emoji version:</a>
+                <input type="textbox" id="EmojiV" value="14.0" onchange="EmojiVX()">
+            </p>
+            <p align="center">
+                <a id="Emoji1L" href="" target="_blank">emoji-sequences.txt</a><br/>
+                <textarea id="Emoji1" style="width:100%" rows="10"></textarea>
+            </p>
+            <p align="center">
+                <a id="Emoji2L" href="" target="_blank">emoji-zwj-sequences.txt</a><br/>
+                <textarea id="Emoji2" style="width:100%" rows="10"></textarea>
+            </p>
+            <p align="center">
+                <input type="button" value="char.js" onclick="Generate()"><br/>
                 <textarea id="Output" style="width:100%" rows="10"></textarea>
             </p>
         </form>
