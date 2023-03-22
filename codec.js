@@ -318,7 +318,7 @@ function CodeToChars(RawData, Code)
                         }
                         if ((TempNum0 >= 0xD800) && (TempNum0 <= 0xDBFF) && (TempNum >= 0xDC00) && (TempNum <= 0xDFFF))
                         {
-                            var NumExt = (((TempNum0 & 1023) + 64) << 10) + (TempNum & 1023)
+                            var NumExt = (((TempNum0 & 1023) + 64) << 10) + (TempNum & 1023);
                             Chars.push(NumExt);
                         }
                     }

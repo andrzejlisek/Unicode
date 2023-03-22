@@ -46,7 +46,7 @@ function ComplexMemoAppend(Key, KeyAppend)
 {
 	if ((Key - ComplexKey) in ComplexNames)
 	{
-	    var AppendInfo = GetCharData(KeyAppend)
+	    var AppendInfo = GetCharData(KeyAppend);
 	    var AppendCodes = GetCharByKey(KeyAppend);
 	    //ComplexNames[Key - ComplexKey][0] = ComplexNames[Key - ComplexKey][0] + "\n" + AppendInfo[0];
 	    //ComplexNames[Key - ComplexKey][1] = ComplexNames[Key - ComplexKey][1] + "\n" + AppendInfo[1];

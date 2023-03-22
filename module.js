@@ -38,7 +38,7 @@ function ModuleSwap(N1, N2)
 
         var I = 0;
         var Obj = document.getElementById("Place" + I);
-        var ObjList = ""
+        var ObjList = "";
         while (Obj)
         {
             var Obj0 = Obj.children[0];
@@ -83,7 +83,7 @@ function ModuleArrangeConfOpt(X)
         while (Obj)
         {
             Obj.size = "30";
-            Obj.color = "silver"
+            Obj.color = "silver";
             I = I + 1;
             Obj = document.getElementById("ModuleSwap" + I);
         }
@@ -95,7 +95,7 @@ function ModuleArrangeConfOpt(X)
         while (Obj)
         {
             Obj.size = "5";
-            Obj.color = "silver"
+            Obj.color = "silver";
             I = I + 1;
             Obj = document.getElementById("ModuleSwap" + I);
         }

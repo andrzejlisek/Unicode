@@ -9,7 +9,7 @@ Create();
 document.getElementById("WriteBox").value = DataGetDefault(SettingsPrefix + "CurrentWriteBox", "");
 
 SettingsGet();
-SetFontStyle(-1)
+SetFontStyle(-1);
 
 
 FindChar(-1);

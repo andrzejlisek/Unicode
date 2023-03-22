@@ -1534,7 +1534,7 @@ function RowExpandCollapse(N)
             {
                 N--;
             }
-            I = N + 1
+            I = N + 1;
             Tbl.rows[N].style.display = "";
             SearchTableItemsType[N] = 2;
             while (SearchTableItemsType[I] == 3)
