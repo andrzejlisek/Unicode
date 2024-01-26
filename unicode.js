@@ -1,4 +1,4 @@
-﻿var SettingsPrefix = "Unicode_";
+var SettingsPrefix = "Unicode_";
 
 var SET_HtmlAsEntity = DataGetIDefault(SettingsPrefix + "SET_HtmlAsEntity", 1);
 
@@ -1049,7 +1049,7 @@ function CharInfoPage(C)
     {
         if (CurrentCodeGet() < 0)
         {
-            var C_ = 0 - CurrentCodeGet();
+            let C_ = 0 - CurrentCodeGet();
             C_ = C_ - (C_ % 256);
             CurrentCodeSet(C + C_);
         }
@@ -1057,7 +1057,11 @@ function CharInfoPage(C)
     }
     else
     {
-        DispCharPage(0 - (CurrentCodeGet() - (CurrentCodeGet() % 256)) - 1);
+        let PageVal = (CurrentCodeGet() - (CurrentCodeGet() % 256));
+        if (PageVal >= 0)
+        {
+            DispCharPage(0 - PageVal - 1);
+        }
     }
 }
 
@@ -1228,12 +1232,17 @@ function FindChar(FindMode)
     {
         return;
     }
+    
+    // Find result process mode
+    let FindModeResult = 0;
 
     // Character list header
     InsertHeaderToList(Tbl, 0);
 
     var I = 1;
     var CharList = [];
+    let CharNot = "~!";
+    let SearchPhraseBucket = [];
 
     // Split text into chars
     if (FindMode == 1)
@@ -1250,49 +1259,67 @@ function FindChar(FindMode)
     if ((FindMode == 1) || (FindMode == 3) || (FindMode == 4) || (FindMode == 5))
     {
         var CharType = [];
-    	FindComplex(CharList, CharType);
-        var II = 1;
-        for (I = 0; I < CharList.length; I++)
+        
+        if (CharList.length != 1)
         {
-            SearchTableItemsCode[II] = CharList[I];
-            SearchTableItemsType[II] = CharType[I];
-            var Key = CharList[I];
-            InsertCharToList(Tbl, II, Key);
-            II++;
+        	FindComplex(CharList, CharType);
+        	FindModeResult = 1;
         }
-        I = II - 1;
+        else
+        {
+            FindModeResult = AsciiCharFindCreate(parseInt(CharList[0]), SearchPhraseBucket);
+            if (FindModeResult == 1)
+            {
+                for (let I = 3; I < SearchPhraseBucket[0].length; I++)
+                {
+                    CharList.push(SearchPhraseBucket[0][I]);
+                    CharType.push(1);
+                }
+                for (let I = 0; I < 10; I++)
+                {
+                    CharType.push(1);
+                }
+                SearchPhraseBucket = [];
+            }
+        }        
     }
 
-    // Search Unicode character list
     if (FindMode == 2)
     {
-        if (false)
+        let SearchPhraseArray = [];
+        let SearchPhraseQ = false;
+        let SearchPhraseItem = "";
+        let SearchPhraseArrayT = [];
+        for (let II = 0; II < SearchPhrase.length; II++)
         {
-            TestChar = [];
-            for (var Key in CharNames)
+            let C = SearchPhrase.toUpperCase().charAt(II);
+            if (C == "\"")
             {
-                for (var II = 0; II <= 2; II++)            
+                SearchPhraseQ = !SearchPhraseQ;
+            }
+            else
+            {
+                if ((C == " ") && (!SearchPhraseQ))
                 {
-                    var TestName = CharNames[Key][II];
-                    for (var III = 0; III < TestName.length; III++)
+                    if (SearchPhraseItem != "")
                     {
-                        if (TestChar.indexOf(TestName[III]) < 0)
-                        {
-                            TestChar.push(TestName[III]);
-                        }
+                        SearchPhraseArray.push(SearchPhraseItem);
+                        SearchPhraseItem = "";
                     }
                 }
+                else
+                {
+                    SearchPhraseItem = SearchPhraseItem + C;
+                }
             }
-            TestChar.sort();        
-            alert("[" + TestChar.join("|") + "]");
         }
-
-
-        var CharNot = "~!";
-        var SearchPhraseArray = SearchPhrase.toUpperCase().split(" ");
-        var SearchPhraseArrayT = [];
-        var SearchPhraseArrayL = SearchPhraseArray.length;
-        for (var II = 0; II < SearchPhraseArrayL; II++)
+        if (SearchPhraseItem != "")
+        {
+            SearchPhraseArray.push(SearchPhraseItem);
+            SearchPhraseItem = "";
+        }
+        
+        for (var II = 0; II < SearchPhraseArray.length; II++)
         {
             if (SearchPhraseArray[II].length > 0)
             {
@@ -1319,77 +1346,167 @@ function FindChar(FindMode)
             }
         }
         
+        SearchPhraseBucket.push(SearchPhraseArray);
+        SearchPhraseBucket.push(SearchPhraseArrayT);
+        SearchPhraseBucket.push(SearchPhraseArray.length);
+        
+        FindModeResult = 3;
+    }
+
+    // Process list directly
+    if (FindModeResult == 1)
+    {
+        var II = 1;
+        for (I = 0; I < CharList.length; I++)
+        {
+            SearchTableItemsCode[II] = CharList[I];
+            SearchTableItemsType[II] = CharType[I];
+            var Key = CharList[I];
+            InsertCharToList(Tbl, II, Key);
+            II++;
+        }
+        I = II - 1;
+    }
+
+    // Search Unicode character list
+    if ((FindModeResult == 2) || (FindModeResult == 3))
+    {
+        let SearchPhraseBucketL = SearchPhraseBucket.length;
+
+        if (FindModeResult == 2)
+        {
+            AsciiCharList = [SearchPhrase, CharList[0]];
+        }
+        else
+        {
+            AsciiCharList = [SearchPhrase, -1];
+        }
+
+        let CodeInclude = [];
+        let CodeExclude = [];
+        for (let BucketI = 0; BucketI < SearchPhraseBucketL; BucketI += 3)        
+        {
+            for (var II = 0; II < SearchPhraseBucket[BucketI + 2]; II++)
+            {
+                if (SearchPhraseBucket[BucketI + 1][II] == 3)
+                {
+                    CodeInclude.push((SearchPhraseBucket[BucketI + 0][II]));
+                }
+                if (SearchPhraseBucket[BucketI + 1][II] == 4)
+                {
+                    CodeExclude.push((SearchPhraseBucket[BucketI + 0][II]));
+                }
+            }
+        }
+
         for (var Key in CharNames)
         {
+            let ItemMatched = false;
             var CharNameItem = CharNames[Key];
-            var Match = 0;
-            
-            var CharNameItemI = (CharNot[0] + CharNameItem[0] + CharNot[0] + CharNameItem[1] + CharNot[0] + CharNameItem[2] + CharNot[0]).toUpperCase();
-            for (var II = 0; II < SearchPhraseArrayL; II++)
+            var CharNameItemI = (CharNot[0] + " " + CharNameItem[0] + " " + CharNot[0] + " " + CharNameItem[1] + " " + CharNot[0] + " " + CharNameItem[2] + " " + CharNot[0]).toUpperCase();
+
+            for (let BucketI = 0; BucketI < SearchPhraseBucketL; BucketI += 3)        
             {
-                if ((SearchPhraseArrayT[II] == 0))
+                var Match0 = 0;
+                var Match1 = 0;
+                
+                if (CodeInclude.indexOf(CharNumToHex(parseInt(Key))) >= 0)
                 {
-                    Match++;
+                    Match0 = 1;
+                    Match1 = 1;
                 }
-                if ((SearchPhraseArrayT[II] == 1) && (CharNameItemI.indexOf(SearchPhraseArray[II]) >= 0))
+                else
                 {
-                    Match++;
+                    if (CodeExclude.indexOf(CharNumToHex(parseInt(Key))) < 0)
+                    {
+                        for (var II = 0; II < SearchPhraseBucket[BucketI + 2]; II++)
+                        {
+                            if (SearchPhraseBucket[BucketI + 1][II] == 1)
+                            {
+                                Match0++;
+                                if (CharNameItemI.indexOf(SearchPhraseBucket[BucketI + 0][II]) >= 0)
+                                {
+                                    Match1++;
+                                }
+                            }
+                            if (SearchPhraseBucket[BucketI + 1][II] == 2)
+                            {
+                                Match0++;
+                                if (CharNameItemI.indexOf(SearchPhraseBucket[BucketI + 0][II]) < 0)
+                                {
+                                    Match1++;
+                                }
+                            }
+                        }
+                    }
                 }
-                if ((SearchPhraseArrayT[II] == 2) && (CharNameItemI.indexOf(SearchPhraseArray[II]) < 0))
+                
+                if ((Match1 == Match0) & (Match0 > 0))
                 {
-                    Match++;
+                    ItemMatched = true;
+                    BucketI = SearchPhraseBucketL;
                 }
             }
             
-            if ((Match == SearchPhraseArrayL) & (Match > 0))
+            if (ItemMatched)
             {
+                AsciiCharList.push(parseInt(Key));
+
                 SearchTableItemsCode[I] = parseInt(Key);
                 SearchTableItemsType[I] = 1;
                 InsertCharToList(Tbl, I, parseInt(Key));
                 I++;
             }
         }
-        
-        for (var Key in ComplexNames)
+
+        if (FindModeResult == 2)
         {
-            var ComplexNameItem = ComplexNames[Key];
-            var Match = 0;
-            
-            var ComplexNameItemI = (CharNot[0] + ComplexNameItem[0] + CharNot[0] + ComplexNameItem[1] + CharNot[0] + ComplexNameItem[2] + CharNot[0]).toUpperCase();
-            for (var II = 0; II < SearchPhraseArrayL; II++)
+            AsciiCharMapCreate();
+        }
+        
+        if (FindModeResult == 3)
+        {
+            for (var Key in ComplexNames)
             {
-                if ((SearchPhraseArrayT[II] == 0))
+                var ComplexNameItem = ComplexNames[Key];
+                var Match = 0;
+                
+                var ComplexNameItemI = (CharNot[0] + ComplexNameItem[0] + CharNot[0] + ComplexNameItem[1] + CharNot[0] + ComplexNameItem[2] + CharNot[0]).toUpperCase();
+                for (var II = 0; II < SearchPhraseBucket[2]; II++)
                 {
-                    Match++;
+                    if ((SearchPhraseBucket[1][II] == 0))
+                    {
+                        Match++;
+                    }
+                    if ((SearchPhraseBucket[1][II] == 1) && (ComplexNameItemI.indexOf(SearchPhraseBucket[0][II]) >= 0))
+                    {
+                        Match++;
+                    }
+                    if ((SearchPhraseBucket[1][II] == 2) && (ComplexNameItemI.indexOf(SearchPhraseBucket[0][II]) < 0))
+                    {
+                        Match++;
+                    }
                 }
-                if ((SearchPhraseArrayT[II] == 1) && (ComplexNameItemI.indexOf(SearchPhraseArray[II]) >= 0))
+                
+                if ((Match == SearchPhraseBucket[2]) & (Match > 0))
                 {
-                    Match++;
-                }
-                if ((SearchPhraseArrayT[II] == 2) && (ComplexNameItemI.indexOf(SearchPhraseArray[II]) < 0))
-                {
-                    Match++;
-                }
-            }
-            
-            if ((Match == SearchPhraseArrayL) & (Match > 0))
-            {
-                SearchTableItemsCode[I] = parseInt(Key) + ComplexKey;
-                SearchTableItemsType[I] = 2;
-                InsertCharToList(Tbl, I, parseInt(Key) + ComplexKey);
-                I++;
-                for (var III = 0; III < ComplexNameItem[6]; III++)
-                {
-                    SearchTableItemsCode[I] = ComplexNameItem[7][III];
-                    SearchTableItemsType[I] = 3;
-                    InsertCharToList(Tbl, I, ComplexNameItem[7][III]);
+                    SearchTableItemsCode[I] = parseInt(Key) + ComplexKey;
+                    SearchTableItemsType[I] = 2;
+                    InsertCharToList(Tbl, I, parseInt(Key) + ComplexKey);
                     I++;
+                    for (var III = 0; III < ComplexNameItem[6]; III++)
+                    {
+                        SearchTableItemsCode[I] = ComplexNameItem[7][III];
+                        SearchTableItemsType[I] = 3;
+                        InsertCharToList(Tbl, I, ComplexNameItem[7][III]);
+                        I++;
+                    }
                 }
             }
         }        
-        
         I--;
     }
+
     SearchTableItemsCode[I + 1] = 0;
     SearchTableItemsType[I + 1] = 0;
     InsertHeaderToList(Tbl, I + 1);
@@ -1697,9 +1814,9 @@ function WriteBoxClear()
 // Write character into text box
 function WriteBoxChar(X)
 {
-    var WriteBox = document.getElementById("WriteBox");
+    let WriteBox = document.getElementById("WriteBox");
 
-    var C = "";
+    let C = "";
     
     if (Math.abs(X) == 1)
     {
@@ -1709,19 +1826,68 @@ function WriteBoxChar(X)
     if ((Math.abs(X) == 2) || (Math.abs(X) == 3))
     {
         C = "";
-        for (var I = CurrentCodeMin; I <= CurrentCodeMax; I++)
+        for (let I = CurrentCodeMin; I <= CurrentCodeMax; I++)
         {
-            var C_ = CurrentCodeGetIdx(I);
+            let C_ = CurrentCodeGetIdx(I);
             if (C_ >= 0)
             {
-                C = C + NumToChar(C_);
+                if (AsciiNonPrint.indexOf(C_) < 0)
+                {
+                    C = C + NumToChar(C_);
+                }
+                else
+                {
+                    C = C + NumToChar(AsciiCharDefault);
+                }
             }
         }
-    
     }
     if (Math.abs(X) == 3)
     {
         C = SET_Prefix + C + SET_Suffix;
+    }
+
+    if ((Math.abs(X) >= 4) && (Math.abs(X) <= 6))
+    {
+        let PageSep = 0;
+        if (Math.abs(X) == 4) PageSep = 16;
+        if (Math.abs(X) == 5) PageSep = 32;
+        if (Math.abs(X) == 6) PageSep = 64;
+        let CX = "";
+        let PageOffset = CurrentCodeGet() >> 8;
+        PageOffset = PageOffset << 8;
+        for (let PageI = 0; PageI <= 255; PageI++)
+        {
+            C = "";
+            for (let I = CurrentCodeMin; I <= CurrentCodeMax; I++)
+            {
+                let C_ = CurrentCodeGetIdx(I);
+                if (I == CurrentCodeI)
+                {
+                    C_ = PageOffset + PageI;
+                }
+                if (C_ >= 0)
+                {
+                    if (AsciiNonPrint.indexOf(C_) < 0)
+                    {
+                        C = C + NumToChar(C_);
+                    }
+                    else
+                    {
+                        C = C + NumToChar(AsciiCharDefault);
+                    }
+                }
+            }
+            CX = CX + SET_Prefix + C + SET_Suffix;
+            if ((PageI > 0) && ((PageI % PageSep) == (PageSep - 1)))
+            {
+                CX = CX + "\n";
+            }
+        }
+    
+        C = CX;
+    
+        //C = SET_Prefix + CurrentCodeI + SET_Suffix;
     }
 
     if (X < 0)

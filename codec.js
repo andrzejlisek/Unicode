@@ -1,3 +1,38 @@
+// Hexadecimal compare
+function HexCompare(a, b)
+{
+    while (a.length < b.length)
+    {
+        a = "0" + a;
+    }
+
+    while (b.length < a.length)
+    {
+        b = "0" + b;
+    }
+    
+    a = a.toUpperCase();
+    b = b.toUpperCase();
+    let Digits = "0123456789ABCDEF";
+
+    for (let I = 0; I < a.length; I++)
+    {
+        let a_ = Digits.indexOf(a.charAt(I));
+        let b_ = Digits.indexOf(b.charAt(I));
+        if (a_ < b_)
+        {
+            return -1;
+        }
+        if (a_ > b_)
+        {
+            return 1;
+        }
+    }
+    
+    return 0;
+}
+
+
 // Change number to decimal code
 function NumToDec(N)
 {
@@ -106,10 +141,10 @@ function GetCharCode(Char, Type)
                 {
                     N1 = ((Char >> 30) & 1) + 0xFC;
                     N2 = ((Char >> 24) & 63) + 0x80;
-                    N2 = ((Char >> 18) & 63) + 0x80;
-                    N3 = ((Char >> 12) & 63) + 0x80;
-                    N4 = ((Char >> 6) & 63) + 0x80;
-                    N5 = ((Char) & 63) + 0x80;
+                    N3 = ((Char >> 18) & 63) + 0x80;
+                    N4 = ((Char >> 12) & 63) + 0x80;
+                    N5 = ((Char >> 6) & 63) + 0x80;
+                    N6 = ((Char) & 63) + 0x80;
                     return NumToHex(N1) + S + NumToHex(N2) + S + NumToHex(N3) + S + NumToHex(N4) + S + NumToHex(N5) + S + NumToHex(N6);
                 }
                 return "?";

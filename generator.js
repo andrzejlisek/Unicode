@@ -276,13 +276,3 @@ function StrCorr(Str)
     return StrX;
 }
 
-function EmojiVX()
-{
-    var Ver = document.getElementById("EmojiV").value;
-    var L1 = document.getElementById("Emoji1L");
-    var L2 = document.getElementById("Emoji2L");
-    L1.href = "https://unicode.org/Public/emoji/" + Ver + "/emoji-sequences.txt";
-    L2.href = "https://unicode.org/Public/emoji/" + Ver + "/emoji-zwj-sequences.txt";
-}
-EmojiVX();
-

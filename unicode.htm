@@ -140,12 +140,20 @@
                         <input type="button" value="EOL A" onClick="WriteBoxChar(1)">
                         <input type="button" value="Char A" onClick="WriteBoxChar(2)">
                         <input type="button" value="Seq A" onClick="WriteBoxChar(3)"><br>
+                        <input type="button" value="Page 64 B" onClick="WriteBoxChar(-6)">
+                        <input type="button" value="Page 32 B" onClick="WriteBoxChar(-5)">
+                        <input type="button" value="Page 16 B" onClick="WriteBoxChar(-4)">
+                        <input type="button" value="Page 16 A" onClick="WriteBoxChar(4)">
+                        <input type="button" value="Page 32 A" onClick="WriteBoxChar(5)">
+                        <input type="button" value="Page 64 A" onClick="WriteBoxChar(6)"><br>
                         <textarea id="WriteBox" rows="1" cols="1" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll; width:100%;" oninput="CurrentSaveWB()"></textarea><br>
                         <input type="button" value="Rows-" onClick="WriteBoxSize(0)">
                         <input type="button" value="Size-" onClick="WriteBoxSize(4)">
                         <input type="button" value="Font" onClick="WriteBoxToFont()">
                         <input type="button" value="Size+" onClick="WriteBoxSize(5)">
                         <input type="button" value="Rows+" onClick="WriteBoxSize(1)"><br>
+                        <input type="button" value="Full convert to ASCII" onClick="AsciiConvert(0);">
+                        <input type="button" value="Map convert to ASCII" onClick="AsciiConvert(1);"><br>
                     </p>
                 </div>
             </div>
@@ -157,6 +165,7 @@
         <script type="text/javascript" src="unistorage.js"></script>
         <script type="text/javascript" src="char.js"></script>
         <script type="text/javascript" src="complex.js"></script>
+        <script type="text/javascript" src="ascii.js"></script>
         <script type="text/javascript" src="unicode.js"></script>
         <script type="text/javascript" src="settings.js"></script>
         <script type="text/javascript" src="init.js"></script>

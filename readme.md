@@ -259,6 +259,14 @@ The UTF\-16 big endian sequence:
 
 ![](readme_pics/Search13.png "")
 
+# Derivative scharacters
+
+You can show all derivative characters for every ASCII character \(character number from **0x20** to **0x7E**\)\. You have to input such character alone and click the **Char** button\. If you input character outside from **0x20** to **0x7E**, there will be work as ordinary find by char\. In the result there will be shown all derivative characters for the ASCII character\.
+
+![](readme_pics/Search6.png "")
+
+The characters are found by analyzing the character name\. The algorithm is described with details in the **readme\_ascii\.md** file\.
+
 # Browser table and navigator
 
 The main puspose of the application is browsing the Unicode characters\. The browser table shows one page consisting of 256 characters\.
@@ -466,7 +474,7 @@ Below the character preview there is the large text box, which allows to input a
 
 You can manually write or paste any text to show, how the text looks using selected font\.
 
-## Buttons above text box
+## Buttons above text box \- upper row
 
 You can also input the unicode characters using the buttons above the text box\.
 
@@ -502,20 +510,50 @@ For example, you can write complex character by the following sequence:
 
 The replacement at the step 8 will be done, because there will be written full sequence of complex character\.
 
-## Buttons below text box
+## Buttons above text box \- lower row
+
+You can write the current character page \(256 characters\) using the buttons in the lower row, above text box\.
+
+![](readme_pics/Text2.png "")
+
+These buttons are the following functions:
+
+
+* **Page 64 B** \- Write the current page before existing text as 64x4 layout\.
+* **Page 32 B** \- Write the current page before existing text as 32x8 layout\.
+* **Page 16 B** \- Write the current page before existing text as 16x16 layout\.
+* **Page 16 A** \- Write the current page after existing text as 16x16 layout\.
+* **Page 32 A** \- Write the current page after existing text as 32x8 layout\.
+* **Page 64 A** \- Write the current page after existing text as 64x4 layout\.
+
+## Buttons below text box \- upper row
 
 The buttons below the text box are the system buttons\.
 
-![](readme_pics/Text2.png "")
+![](readme_pics/Text3.png "")
 
 The functions are following:
 
 
-* **Rows\-** \- Decrease the row number of text box 
-* **Size\-** \- Decrease the font size
-* **Font** \- Copy text box contents into the Font family field, usable when you define the downloadable font \(described below\)
-* **Size\+** \- Increase the font size
-* **Rows\+** \- Increase the row number of text box 
+* **Rows\-** \- Decrease the row number of text box \.
+* **Size\-** \- Decrease the font size\.
+* **Font** \- Copy text box contents into the Font family field, usable when you define the downloadable font \(described below\)\.
+* **Size\+** \- Increase the font size\.
+* **Rows\+** \- Increase the row number of text box\.
+
+## Buttons below text box \- lower row
+
+You can convert the text existing in text box into the ASCII version replacing derivative characters to ASCII characters\.
+
+![](readme_pics/Text4.png "")
+
+There are two conversion ways:
+
+
+* **Full convert to ASCII** \- Replace derivative characters with ASCII and replace other non\-ASCII characters with **?** character\.
+* **Map convert to ASCII** \- Replace derivative characters with ASCII only\.
+
+During the conversion, there are used the same algorithm for derivative character finding for specified ASCII character\. At the first time, the conversion may take a while, because the application builds the conversion map\. If the browser suggests to break the script, please allow to continue and wait\. Usually, the time is not longer than 120 seconds\. The derivative character finding is detailed in the **readme\_ascii\.md** file\.
 
 # Downloadable web font
 
