@@ -8,7 +8,7 @@ Every ASCII character has the derivative definition by sets of the criteria call
 
 
 * Included phrases in name\.
-* Excluded phrases in name
+* Excluded phrases in name\.
 
 For derivative list of single character, there can be several criteria variants\. The character will be added to the list if meets at least one variant criteria\. Additionally, for some characters, thera are explicitly defined included numbers and excluded numbers:
 
