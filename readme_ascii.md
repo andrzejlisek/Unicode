@@ -16,7 +16,7 @@ For derivative list of single character, there can be several criteria variants\
 * The included numbers are the characters, which will be included in the derivative list regardless the character name and criteria meet\.
 * The excluded number are the characters, which will be excluded from the derivative list regardless the character name and criteria meet\.
 
-## Searchv variant example
+## Search variant example
 
 For instance, assume, that search for certain character derivatives has the following criteria:
 
@@ -294,6 +294,27 @@ The table below describes the search variants for digits and special characters\
 | \} | Variant 2 | " CLOSING ", " CURLY BRACKET " | " LEFT ", " OPENING " |
 | ~ | Characters | 98, 02F7 |   |
 | ~ | Variant 1 | " TILDE " | " EQUALS ", " LETTER ", " MINUS ", " PLUS " |
+
+# Derivative list information
+
+When you find the derivatives for selected character at the first time, the derivative list will be built for this character and will be saved in memory fo repeated use\. There is the reason, why getting derivatives at the first time takes longer time for several characer\. In the browser's concole, there will be printed information about derivative set\.
+
+If you want to get derivative sets for all ASCII characters, do following:
+
+
+* Be sure, that in **Find** field is not single character, which invokes finding derivatives for this character\. otherwise, click the **Clear** button\.
+* Refresh \(restart\) the application\.
+* Click one of the buttons above the text field, which writes displayed character page, including **Page 64 B** or **Page 32 A**\. Every page contains at least one character, which is not derivative of any ASCII character\.
+* Click the **Full convert to ASCII** or **Map convert to ASCII** button below the text field\.
+* Copy whole text written in browser's console\.
+
+The character map are created by the order:
+
+
+* Special characters including space\.
+* Lower case letters\.
+* Upper case letters\.
+* Digits\.
 
 
 

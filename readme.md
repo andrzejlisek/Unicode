@@ -22,10 +22,8 @@ Application uses data generated from the four Unicode official files:
 
 * [https://unicode\.org/Public/UNIDATA/Blocks\.txt](https://unicode.org/Public/UNIDATA/Blocks.txt "https://unicode.org/Public/UNIDATA/Blocks.txt")
 * [https://unicode\.org/Public/UNIDATA/UnicodeData\.txt](https://unicode.org/Public/UNIDATA/UnicodeData.txt "https://unicode.org/Public/UNIDATA/UnicodeData.txt")
-* [https://unicode\.org/Public/emoji/??\.?/emoji\-sequences\.txt](https://unicode.org/Public/emoji/14.0/emoji-sequences.txt "https://unicode.org/Public/emoji/14.0/emoji-sequences.txt")
-* [https://unicode\.org/Public/emoji/??\.?/emoji\-zwj\-sequences\.txt](https://unicode.org/Public/emoji/14.0/emoji-zwj-sequences.txt "https://unicode.org/Public/emoji/14.0/emoji-zwj-sequences.txt")
-
-In place of the **??\.?** there is version number of emoji data used to generate complex character data\.
+* [https://unicode\.org/Public/emoji/latest/emoji\-sequences\.txt](https://unicode.org/Public/emoji/14.0/emoji-sequences.txt "https://unicode.org/Public/emoji/14.0/emoji-sequences.txt")
+* [https://unicode\.org/Public/emoji/latest/emoji\-zwj\-sequences\.txt](https://unicode.org/Public/emoji/14.0/emoji-zwj-sequences.txt "https://unicode.org/Public/emoji/14.0/emoji-zwj-sequences.txt")
 
 ## Updating chars\.js
 
@@ -33,11 +31,15 @@ Character definition are in the **char\.js** file as Javascript functions, which
 
 To update the **char\.js** file, when the Unicode Consortium publish newer character names or emoji names, run the **generator\.htm** file\. You can see the five text boxes\. Above each box, there is link to appropriate file published by the Unicode Consortium\.
 
-The two first files, **Blocks\.txt** and **UnicodeData\.txt** has constant link, so you can simply open the links in new tab and copy downloaded text into appropriate text box\.
+There are the following data files:
 
-The files containing the complex character definitions, especially emoji, are published inside the version number subdirectories\. To check the number of newest version, open the **Emoji version** link and check the name of newest subdirectory\. Then you have to input the name into small text box\.
 
-After correcting the version, tou can open the **emoji\-sequences\.txt** and **emoji\-zwj\-sequences\.txt** files using the links below the **Emoji version** link\. Hou vahe to copy the downloaded contents of these files into the text boxes\.
+* **Blocks\.txt**
+* **UnicodeData\.txt**
+* **emoji\-sequences\.txt**
+* **emoji\-zwj\-sequences\.txt**
+
+You can simply open the links in new tab and copy downloaded text into appropriate text box of each file\.
 
 Finally, click the **char\.js** button\. In the last text box, there will be generated code, which you have to paste into the **char\.js** file in the place of existing **char\.js** contents\.
 

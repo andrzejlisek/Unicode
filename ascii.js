@@ -140,6 +140,7 @@ function AsciiConvert(MapOnly)
     }
 
     document.getElementById("WriteBox").value = TxtO;
+    CurrentSaveWB();
 }
 
 
@@ -828,12 +829,15 @@ function AsciiCharFindCreate(LetterNum_, Bucket)
             BucketInclude.sort(HexCompare);
             BucketExclude.sort(HexCompare);
 
-            let BucketInfo = "";
             let CharPrint = String.fromCharCode(LetterNum_);
 
-            if ((BucketInclude.length > 0) || (BucketExclude.length > 0))
+            if (BucketInclude.length > 0)
             {
-                BucketInfo = BucketInfo + CharPrint + "\tCharacters\t" + BucketInclude.join(", ") + "\t" + BucketExclude.join(", ") + "\n";
+                console.log(CharPrint + " Number includes: " + BucketInclude.join(", "));
+            }
+            if (BucketExclude.length > 0)
+            {
+                console.log(CharPrint + " Number excludes: " + BucketExclude.join(", "));
             }
             
             let VariantI = 1;
@@ -843,16 +847,17 @@ function AsciiCharFindCreate(LetterNum_, Bucket)
                 let VEx = (BucketVariants[I + 1].length > 0) ? ("\"" + BucketVariants[I + 1].join("\", \"") + "\"") : "";
                 if ((VIn != "") || (VEx != ""))
                 {
-                    BucketInfo = BucketInfo + CharPrint + "\tVariant " + VariantI + "\t" + VIn + "\t" + VEx + "\n";
+                    if (VIn != "")
+                    {
+                        console.log(CharPrint + " Variant " + VariantI + " name includes: " + VIn);
+                    }
+                    if (VEx != "")
+                    {
+                        console.log(CharPrint + " Variant " + VariantI + " name excludes: " + VEx);
+                    }
                     VariantI++;
                 }
             }
-            
-            if (BucketInfo == "")
-            {
-                BucketInfo = BucketInfo + CharPrint + "\t\t\t\n";
-            }
-            console.log(BucketInfo);
         }
         
         return 2;
@@ -925,5 +930,27 @@ function AsciiCharMapCreate()
         AsciiCharMap[CharNo] = [];
         alert("Test failed:" + ErrorMessage);
     }
+    let CharDisp = AsciiCharMap[CharNo][0];
+    switch (CharDisp)
+    {
+        case "\"":
+        case "\'":
+        case "\\":
+            CharDisp = "\\" + CharDisp;
+            break;
+    }
+    let AsciiCharMapInfo = "derivative[\'" + CharDisp + "\'] = {";
+    if (AsciiCharMap[CharNo].length > 0)
+    {
+        AsciiCharMapInfo += "0x";
+        AsciiCharMapInfo += CharNumToHex(AsciiCharMap[CharNo][2]);
+        for (let I = 3; I < AsciiCharMap[CharNo].length; I++)
+        {
+            AsciiCharMapInfo += ", 0x";
+            AsciiCharMapInfo += CharNumToHex(AsciiCharMap[CharNo][I]);
+        }
+    }
+    AsciiCharMapInfo += "};";
+    console.log(AsciiCharMapInfo);
 }
 
