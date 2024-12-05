@@ -557,7 +557,7 @@ There are two conversion ways:
 * **Map convert to ASCII** \- Replace derivative characters with ASCII only\.
 * **Show non\-convertible to ASCII** \- Replace ASCII characters and derivative characters with **?** character\. There will be remain non\-convertible characterss only\.
 
-During the conversion, there are used the same algorithm for derivative character finding for specified ASCII character\. At the first time, the conversion may take a while, because the application builds the conversion map\. If the browser suggests to break the script, please allow to continue and wait\. Usually, the time is not longer than 120 seconds\. The derivative character finding is detailed in the **readme\_ascii\.md** file\.
+The derivative character finding algorithm and rules with exceptions is detailed in the **readme\_ascii\.md** file\.
 
 # Downloadable web font
 
