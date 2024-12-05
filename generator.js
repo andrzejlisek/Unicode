@@ -68,6 +68,11 @@ function HexToInt(H)
     return Num;
 }
 
+function NumDecHexDisp(N)
+{
+    return N + "=" + IntToHex(N);
+}
+
 function Generate()
 {
     var RawBlock = document.getElementById("Input1").value.split('\n');
@@ -107,6 +112,8 @@ function Generate()
         }
     }
     CodeB.push("}");
+
+
     
     CodeC.push("function FillCharNames(X)");
     CodeC.push("{");
@@ -156,11 +163,46 @@ function Generate()
                     Combine2[CombineI]++;
                 }
             }
-            var CodeLine = " X[" + IntToHex(CharNum) + "] = [\"" + BlockNameX + "\", \"" + RawLine[1] + "\", \"" + RawLine[10] + "\", " + IntToHex(CodeU) + ", " + IntToHex(CodeL) + ", " + IntToHex(CodeT) + ", " + IntToHex(Block1) + ", " + IntToHex(Block2) + "];";
+            const CodeLine = " X[" + IntToHex(CharNum) + "] = [\"" + BlockNameX + "\", \"" + RawLine[1] + "\", \"" + RawLine[10] + "\", " + IntToHex(CodeU) + ", " + IntToHex(CodeL) + ", " + IntToHex(CodeT) + ", " + IntToHex(Block1) + ", " + IntToHex(Block2) + ", " + GenerateAsciiReplacement(CharNum, RawLine[1], RawLine[10]) + "];";
             CodeC.push(CodeLine);
         }
     }
     CodeC.push("}");
+
+
+
+    CodeC.push("");
+    CodeC.push("function FillCharDerivatives(X)");
+    CodeC.push("{");
+    for (var I = 32; I <= 126; I++)
+    {
+        AsciiCharDerivativies[I].sort();
+    }    
+    for (var I = 32; I <= 126; I++)
+    {
+        CodeC.push(" X[" + IntToHex(I) + "] = [];");
+        for (var II = 0; II < AsciiCharDerivativies[I].length; II++)
+        {
+            CodeC.push(" X[" + IntToHex(I) + "].push(" + IntToHex(AsciiCharDerivativies[I][II]) + ");");
+            for (var J = 32; J <= 126; J++)
+            {
+                if (I != J)
+                {
+                    for (var JJ = 0; JJ < AsciiCharDerivativies[J].length; JJ++)
+                    {
+                        if (AsciiCharDerivativies[I][II] == AsciiCharDerivativies[J][JJ])
+                        {
+                            alert(      "Derivative conflict: " + NumDecHexDisp(AsciiCharDerivativies[I][II]) + "   " + NumDecHexDisp(I) + " <> " + NumDecHexDisp(J));
+                            console.log("Derivative conflict: " + NumDecHexDisp(AsciiCharDerivativies[I][II]) + "   " + NumDecHexDisp(I) + " <> " + NumDecHexDisp(J));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    CodeC.push("}");
+
+
 
     CodeC.push("");
     CodeC.push("function FillComplexSuffix(X)");
@@ -275,4 +317,7 @@ function StrCorr(Str)
     }
     return StrX;
 }
+
+
+GenerateAsciiReplacementMap();
 

@@ -6,6 +6,7 @@ There is simple application, wchich has following abilities and purposes:
 * Browse Unicode characters by code\.
 * Find codes of characters used in text\.
 * Find character by name\.
+* Convert supplied text into text written using ASCII characters only\.s
 * Preview characters connected with other characters\.
 * Collect unicode characters as text to copy\.
 * Test system fonts and downloadable fonts\.
@@ -554,6 +555,7 @@ There are two conversion ways:
 
 * **Full convert to ASCII** \- Replace derivative characters with ASCII and replace other non\-ASCII characters with **?** character\.
 * **Map convert to ASCII** \- Replace derivative characters with ASCII only\.
+* **Show non\-convertible to ASCII** \- Replace ASCII characters and derivative characters with **?** character\. There will be remain non\-convertible characterss only\.
 
 During the conversion, there are used the same algorithm for derivative character finding for specified ASCII character\. At the first time, the conversion may take a while, because the application builds the conversion map\. If the browser suggests to break the script, please allow to continue and wait\. Usually, the time is not longer than 120 seconds\. The derivative character finding is detailed in the **readme\_ascii\.md** file\.
 

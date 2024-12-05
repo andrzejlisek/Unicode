@@ -72,6 +72,9 @@ var CurrentCodeL = 0;
 var CurrentCodeMin = 0;
 var CurrentCodeMax = 0;
 
+let AsciiCharDefault = 63;
+let AsciiNonPrint = [0x09, 0x0A, 0x0C, 0x0D];
+
 function CharInfoDisplayCodeSet(N)
 {
     if (N >= 0)
@@ -865,6 +868,9 @@ function NewCell(TblR, N)
 // Character names
 var CharNames = [];
 
+// Character derivatives
+var CharDerivatives = {};
+
 // Block names
 var BlockNames = [];
 var BlockNamesL = 0;
@@ -879,6 +885,7 @@ function Create()
     CurrentLoad();
     FillCharNames(CharNames);
     FillBlockNames(BlockNames);
+    FillCharDerivatives(CharDerivatives);
     BlockNamesL = BlockNames.length;
     FillComplexNames(ComplexNames);
     FillComplexCodes();
@@ -1267,19 +1274,16 @@ function FindChar(FindMode)
         }
         else
         {
-            FindModeResult = AsciiCharFindCreate(parseInt(CharList[0]), SearchPhraseBucket);
-            if (FindModeResult == 1)
+            FindModeResult = 1;
+            CharType.push(1);
+            if (CharDerivatives[parseInt(CharList[0])])
             {
-                for (let I = 3; I < SearchPhraseBucket[0].length; I++)
+                const Idx = parseInt(CharList[0]);
+                for (let I = 0; I < CharDerivatives[Idx].length; I++)
                 {
-                    CharList.push(SearchPhraseBucket[0][I]);
+                    CharList.push(CharDerivatives[Idx][I]);
                     CharType.push(1);
                 }
-                for (let I = 0; I < 10; I++)
-                {
-                    CharType.push(1);
-                }
-                SearchPhraseBucket = [];
             }
         }        
     }
@@ -1369,18 +1373,9 @@ function FindChar(FindMode)
     }
 
     // Search Unicode character list
-    if ((FindModeResult == 2) || (FindModeResult == 3))
+    if (FindModeResult == 3)
     {
         let SearchPhraseBucketL = SearchPhraseBucket.length;
-
-        if (FindModeResult == 2)
-        {
-            AsciiCharList = [SearchPhrase, CharList[0]];
-        }
-        else
-        {
-            AsciiCharList = [SearchPhrase, -1];
-        }
 
         let CodeInclude = [];
         let CodeExclude = [];
@@ -1450,8 +1445,6 @@ function FindChar(FindMode)
             
             if (ItemMatched)
             {
-                AsciiCharList.push(parseInt(Key));
-
                 SearchTableItemsCode[I] = parseInt(Key);
                 SearchTableItemsType[I] = 1;
                 InsertCharToList(Tbl, I, parseInt(Key));
@@ -1459,11 +1452,6 @@ function FindChar(FindMode)
             }
         }
 
-        if (FindModeResult == 2)
-        {
-            AsciiCharMapCreate();
-        }
-        
         if (FindModeResult == 3)
         {
             for (var Key in ComplexNames)
@@ -1939,5 +1927,63 @@ function WriteBoxToFont()
     SettingsSave();
     document.getElementById("xSET_FontName").value = SET_FontName;
     SetFontStyle(0);
+}
+
+// Convert text into text containing ASCII characters only
+function AsciiConvert(MapOnly)
+{
+    var WriteBox = document.getElementById("WriteBox");
+
+    let TxtI = document.getElementById("WriteBox").value;
+    let TxtO = ""
+    
+    let Txt_ = TextToChars(TxtI);
+
+    let TxtL = Txt_.length;
+    for (let I = 0; I < TxtL; I++)
+    {
+        let N = Txt_[I];
+        if (N <= 126)
+        {
+            if ((MapOnly < 2) || (N <= 32))
+            {
+                TxtO = TxtO + NumToChar(N);
+            }
+            else
+            {
+                TxtO = TxtO + NumToChar(AsciiCharDefault);
+            }
+        }
+        else
+        {
+            let N0 = (MapOnly > 0) ? N : AsciiCharDefault;
+            if (CharNames[N])
+            {
+                if (CharNames[N][8] > 0)
+                {
+                    N0 = CharNames[N][8];
+                    if (MapOnly == 2)
+                    {
+                        N = AsciiCharDefault;
+                    }
+                }
+            }
+
+            if (N0 >= 0)
+            {
+                if (MapOnly < 2)
+                {
+                    TxtO = TxtO + NumToChar(N0);
+                }
+                else
+                {
+                    TxtO = TxtO + NumToChar(N);
+                }
+            }
+        }
+    }
+
+    document.getElementById("WriteBox").value = TxtO;
+    CurrentSaveWB();
 }
 
